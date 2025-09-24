@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-secondary: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --blue-700: #1d4ed8;
+            --warning: #d97706;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); padding: 20px; }
+        .header { display: flex; align-items: center; padding: 20px 0 40px; }
+        .back-button { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .back-button:hover { border-color: var(--primary); transform: scale(1.05); }
+        .header-title { font-size: 18px; font-weight: 700; color: var(--foreground); margin-left: 16px; }
+        .profile-info { text-align: center; margin-bottom: 32px; }
+        .avatar { width: 80px; height: 80px; background: var(--surface-secondary); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: var(--shadow-md); }
+        .profile-name { font-size: 22px; font-weight: 700; color: var(--foreground); margin-bottom: 4px; }
+        .profile-phone { font-size: 16px; color: var(--blue-700); margin-bottom: 4px; }
+        .profile-email { font-size: 16px; color: var(--blue-700); }
+        .balance-card { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; }
+        .balance-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        .balance-info { flex: 1; }
+        .balance-amount { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .recharge-btn { background: var(--surface-primary); color: white; padding: 8px 16px; border: none; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .recharge-btn:hover { transform: scale(1.05); }
+        .stats-section { margin-bottom: 32px; }
+        .section-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .stat-card { background: var(--surface-card); border: 2px solid var(--blue-200); padding: 16px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow-md); transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--surface-secondary); }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .stat-value { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: var(--blue-700); font-weight: 500; }
+        .settings-section { margin-bottom: 32px; }
+        .settings-menu { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden; }
+        .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--blue-200); cursor: pointer; transition: all 0.3s ease; }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item:hover { background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%); }
+        .menu-item-content { display: flex; align-items: center; gap: 12px; }
+        .menu-item-text { font-size: 15px; font-weight: 500; color: var(--foreground); }
+        .version-info { text-align: center; color: #64748b; font-size: 14px; }
+        .theme-label { position: absolute; top: 12px; right: 12px; background: var(--primary); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">PROFILE</div>
+        <div class="screen">
+            <div class="header">
+                <div class="back-button">
+                    <i data-lucide="arrow-left" size="20" color="#1d4ed8"></i>
+                </div>
+                <div class="header-title">Mi Perfil</div>
+            </div>
+            
+            <div class="profile-info">
+                <div class="avatar">
+                    <i data-lucide="user" size="36" color="#1d4ed8"></i>
+                </div>
+                <div class="profile-name">Juan Carlos Pérez</div>
+                <div class="profile-phone">+504 9999-9999</div>
+                <div class="profile-email">juan@email.com</div>
+            </div>
+            
+            <div class="balance-card">
+                <div class="balance-info">
+                    <div class="balance-amount">
+                        <i data-lucide="wallet" size="20"></i>
+                        Saldo actual: 150 min
+                    </div>
+                </div>
+                <button class="recharge-btn">Recargar</button>
+            </div>
+            
+            <div class="stats-section">
+                <div class="section-title">
+                    <i data-lucide="bar-chart-3" size="20"></i>
+                    Mis Estadísticas
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">45</div>
+                        <div class="stat-label">Sesiones</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">32 min</div>
+                        <div class="stat-label">Promedio</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">L 180</div>
+                        <div class="stat-label">Gastado Total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Cliente Activo</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <div class="section-title">
+                    <i data-lucide="settings" size="20"></i>
+                    Configuración
+                </div>
+                <div class="settings-menu">
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <i data-lucide="bell" size="16" color="#1d4ed8"></i>
+                            <span class="menu-item-text">Notificaciones</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="16" color="#64748b"></i>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <i data-lucide="credit-card" size="16" color="#1d4ed8"></i>
+                            <span class="menu-item-text">Métodos de pago</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="16" color="#64748b"></i>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <i data-lucide="qr-code" size="16" color="#1d4ed8"></i>
+                            <span class="menu-item-text">Mi QR personal</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="16" color="#64748b"></i>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <i data-lucide="help-circle" size="16" color="#1d4ed8"></i>
+                            <span class="menu-item-text">Ayuda y soporte</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="16" color="#64748b"></i>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <i data-lucide="log-out" size="16" color="#dc2626"></i>
+                            <span class="menu-item-text" style="color: #dc2626;">Cerrar sesión</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="16" color="#64748b"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="version-info">Versión 1.2.0</div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

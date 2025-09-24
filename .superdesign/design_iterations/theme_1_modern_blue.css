@@ -1,0 +1,53 @@
+:root {
+  /* Modern Blue Professional Theme - Rich & Colorful */
+  --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  --foreground: #1e293b;
+  --card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --card-foreground: #1e293b;
+  --primary: #1d4ed8;
+  --primary-foreground: #ffffff;
+  --secondary: #3b82f6;
+  --secondary-foreground: #ffffff;
+  --accent: #2563eb;
+  --accent-foreground: #ffffff;
+  --success: #059669;
+  --success-foreground: #ffffff;
+  --warning: #d97706;
+  --warning-foreground: #ffffff;
+  --error: #dc2626;
+  --error-foreground: #ffffff;
+  --border: #cbd5e1;
+  --ring: #2563eb;
+  
+  /* Rich Blue palette */
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-800: #1e40af;
+  --blue-900: #1e3a8a;
+  
+  /* Surface variations */
+  --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  --surface-secondary: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+  --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+  
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  /* Spacing & Layout */
+  --radius: 16px;
+  --spacing: 24px;
+  
+  /* Enhanced Shadows with blue tint */
+  --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+  --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+  --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+  --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+}

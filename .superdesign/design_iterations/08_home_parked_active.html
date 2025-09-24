@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Home Parked Active</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Modern Blue Professional Theme - Rich & Colorful */
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            --card-foreground: #1e293b;
+            --primary: #1d4ed8;
+            --primary-foreground: #ffffff;
+            --secondary: #3b82f6;
+            --secondary-foreground: #ffffff;
+            --accent: #2563eb;
+            --accent-foreground: #ffffff;
+            --success: #059669;
+            --success-foreground: #ffffff;
+            --warning: #d97706;
+            --warning-foreground: #ffffff;
+            --error: #dc2626;
+            --error-foreground: #ffffff;
+            --border: #cbd5e1;
+            --ring: #2563eb;
+            
+            /* Rich Blue palette */
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-200: #bfdbfe;
+            --blue-300: #93c5fd;
+            --blue-400: #60a5fa;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --blue-800: #1e40af;
+            --blue-900: #1e3a8a;
+            
+            /* Surface variations */
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-secondary: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            
+            /* Typography */
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            /* Spacing & Layout */
+            --radius: 16px;
+            --spacing: 24px;
+            
+            /* Enhanced Shadows with blue tint */
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: var(--font-sans);
+            background: var(--background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .phone-mockup {
+            width: 375px;
+            height: 812px;
+            background: var(--surface-elevated);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            position: relative;
+        }
+        
+        .screen {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background: var(--surface-elevated);
+        }
+        
+        .header {
+            background: var(--surface-primary);
+            padding: 60px 20px 40px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .icon-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        
+        .active-session-card {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.25) 0%, rgba(16, 185, 129, 0.15) 100%);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(5, 150, 105, 0.4);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.2);
+        }
+        
+        .session-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .session-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .session-timer {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            text-align: center;
+            margin-bottom: 16px;
+            font-family: var(--font-mono);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .session-details {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255,255,255,0.95);
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 24px 20px;
+            margin-top: -20px;
+            background: var(--surface-elevated);
+        }
+        
+        .qr-card {
+            background: var(--surface-card);
+            border: 2px solid var(--blue-200);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .qr-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--surface-primary);
+        }
+        
+        .qr-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 16px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(29, 78, 216, 0.2);
+        }
+        
+        .qr-pattern {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 2px;
+            width: 160px;
+            height: 160px;
+        }
+        
+        .qr-dot {
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .qr-dot.empty { 
+            background: transparent; 
+        }
+        
+        .qr-code-text {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--primary);
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+            font-weight: 600;
+            background: var(--blue-50);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .qr-instruction {
+            color: var(--foreground);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        
+        .qr-instruction strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .balance-info {
+            background: var(--surface-secondary);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid var(--blue-300);
+        }
+        
+        .balance-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 22px;
+        }
+        
+        .quick-action {
+            background: var(--surface-card);
+            border: 2px solid var(--blue-200);
+            padding: 24px;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quick-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--surface-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .quick-action:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .quick-action:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+        }
+        
+        .quick-action-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .extend-icon { 
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
+            color: var(--warning);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+        }
+        
+        .report-icon { 
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); 
+            color: var(--error);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+        
+        .quick-action:hover .quick-action-icon {
+            transform: scale(1.1);
+        }
+        
+        .quick-action-text {
+            font-weight: 600;
+            color: var(--foreground);
+            font-size: 15px;
+        }
+        
+        .theme-label {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">ACTIVE</div>
+        <div class="screen">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="logo">
+                            <i data-lucide="car" size="28"></i>
+                            <span>ParKing</span>
+                        </div>
+                        <div class="header-actions">
+                            <div class="icon-button">
+                                <i data-lucide="user" size="20"></i>
+                            </div>
+                            <div class="icon-button">
+                                <i data-lucide="menu" size="20"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Session Display -->
+                    <div class="active-session-card">
+                        <div class="session-header">
+                            <i data-lucide="timer" size="20"></i>
+                            <div class="session-title">SESIÓN ACTIVA</div>
+                        </div>
+                        
+                        <div class="session-timer">00:32:15</div>
+                        
+                        <div class="session-details">
+                            <span>Tarifa: L 1.50/min</span>
+                            <span>Costo actual: L 48.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="content">
+                <!-- QR Code Card -->
+                <div class="qr-card">
+                    <div class="qr-title">TU QR CODE</div>
+                    
+                    <div class="qr-code">
+                        <div class="qr-pattern">
+                            <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div>
+                            <div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div>
+                            <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="qr-code-text">PARKING_USER_50498765</div>
+                    
+                    <div class="qr-instruction">
+                        Muestra este QR al guardia para<br>
+                        <strong>SALIR</strong> del estacionamiento
+                    </div>
+                </div>
+
+                <!-- Balance Info -->
+                <div class="balance-info">
+                    <div class="balance-text">
+                        <i data-lucide="wallet" size="20"></i>
+                        102 min restantes
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="quick-action">
+                        <div class="quick-action-icon extend-icon">
+                            <i data-lucide="clock" size="24"></i>
+                        </div>
+                        <div class="quick-action-text">Extender Tiempo</div>
+                    </div>
+                    <div class="quick-action">
+                        <div class="quick-action-icon report-icon">
+                            <i data-lucide="phone" size="24"></i>
+                        </div>
+                        <div class="quick-action-text">Reportar Problema</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

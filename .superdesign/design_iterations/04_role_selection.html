@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Role Selection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Modern Blue Professional Theme - Rich & Colorful */
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            --card-foreground: #1e293b;
+            --primary: #1d4ed8;
+            --primary-foreground: #ffffff;
+            --secondary: #3b82f6;
+            --secondary-foreground: #ffffff;
+            --accent: #2563eb;
+            --accent-foreground: #ffffff;
+            --success: #059669;
+            --success-foreground: #ffffff;
+            --warning: #d97706;
+            --warning-foreground: #ffffff;
+            --error: #dc2626;
+            --error-foreground: #ffffff;
+            --border: #cbd5e1;
+            --ring: #2563eb;
+            
+            /* Rich Blue palette */
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-200: #bfdbfe;
+            --blue-300: #93c5fd;
+            --blue-400: #60a5fa;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --blue-800: #1e40af;
+            --blue-900: #1e3a8a;
+            
+            /* Surface variations */
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-secondary: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            
+            /* Typography */
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            /* Spacing & Layout */
+            --radius: 16px;
+            --spacing: 24px;
+            
+            /* Enhanced Shadows with blue tint */
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: var(--font-sans);
+            background: var(--background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .phone-mockup {
+            width: 375px;
+            height: 812px;
+            background: var(--surface-elevated);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            position: relative;
+        }
+        
+        .screen {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background: var(--surface-elevated);
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 20px 0 40px;
+        }
+        
+        .back-button {
+            background: var(--surface-card);
+            border: 2px solid var(--blue-200);
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .back-button:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-left: 16px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .security-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--surface-secondary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: 16px;
+        }
+        
+        .description {
+            font-size: 14px;
+            color: var(--foreground);
+            line-height: 1.5;
+            margin-bottom: 40px;
+        }
+        
+        .pin-inputs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+        
+        .pin-input {
+            width: 50px;
+            height: 60px;
+            background: var(--surface-card);
+            border: 2px solid var(--blue-200);
+            border-radius: var(--radius);
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--foreground);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+        
+        .pin-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md), 0 0 0 3px rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .pin-input.filled::before {
+            content: '●';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: var(--primary);
+        }
+        
+        .pin-input.filled {
+            color: transparent;
+        }
+        
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+            width: 200px;
+        }
+        
+        .key-button {
+            width: 56px;
+            height: 56px;
+            background: var(--surface-card);
+            border: 2px solid var(--blue-200);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--foreground);
+        }
+        
+        .key-button:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .key-button:active {
+            transform: scale(0.95);
+        }
+        
+        .key-spacer {
+            width: 56px;
+            height: 56px;
+        }
+        
+        .delete-button {
+            background: var(--surface-secondary);
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .primary-button {
+            width: 100%;
+            padding: 18px 24px;
+            background: var(--surface-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            letter-spacing: 0.5px;
+        }
+        
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .primary-button:active {
+            transform: translateY(0);
+        }
+        
+        .theme-label {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">ROLE PIN</div>
+        <div class="screen">
+            <!-- Header -->
+            <div class="header">
+                <div class="back-button">
+                    <i data-lucide="arrow-left" size="20" color="#1d4ed8"></i>
+                </div>
+                <div class="header-title">Acceso especial</div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Security Icon -->
+                <div class="security-icon">
+                    <i data-lucide="shield-check" size="36" color="#1d4ed8"></i>
+                </div>
+                
+                <!-- Title -->
+                <div class="title">Acceso especial</div>
+                
+                <!-- Description -->
+                <div class="description">Ingresa tu PIN de acceso</div>
+                
+                <!-- PIN Inputs -->
+                <div class="pin-inputs">
+                    <div class="pin-input filled" data-index="0"></div>
+                    <div class="pin-input filled" data-index="1"></div>
+                    <div class="pin-input" data-index="2"></div>
+                    <div class="pin-input" data-index="3"></div>
+                    <div class="pin-input" data-index="4"></div>
+                    <div class="pin-input" data-index="5"></div>
+                </div>
+                
+                <!-- Keypad -->
+                <div class="keypad">
+                    <button class="key-button" data-number="1">1</button>
+                    <button class="key-button" data-number="2">2</button>
+                    <button class="key-button" data-number="3">3</button>
+                    <button class="key-button" data-number="4">4</button>
+                    <button class="key-button" data-number="5">5</button>
+                    <button class="key-button" data-number="6">6</button>
+                    <button class="key-button" data-number="7">7</button>
+                    <button class="key-button" data-number="8">8</button>
+                    <button class="key-button" data-number="9">9</button>
+                    <button class="key-button delete-button" data-action="delete">Borrar</button>
+                    <button class="key-button" data-number="0">0</button>
+                    <div class="key-spacer"></div>
+                </div>
+                
+                <!-- Access Button -->
+                <button class="primary-button">ACCEDER</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+        
+        let currentPin = ['●', '●', '', '', '', ''];
+        let currentIndex = 2;
+        
+        function updatePinDisplay() {
+            document.querySelectorAll('.pin-input').forEach((input, index) => {
+                if (currentPin[index] && currentPin[index] !== '') {
+                    input.classList.add('filled');
+                } else {
+                    input.classList.remove('filled');
+                }
+            });
+        }
+        
+        // Keypad functionality
+        document.querySelectorAll('.key-button').forEach(button => {
+            button.addEventListener('click', () => {
+                if (button.dataset.number && currentIndex < 6) {
+                    currentPin[currentIndex] = '●';
+                    currentIndex++;
+                    updatePinDisplay();
+                } else if (button.dataset.action === 'delete' && currentIndex > 0) {
+                    currentIndex--;
+                    currentPin[currentIndex] = '';
+                    updatePinDisplay();
+                }
+            });
+        });
+        
+        updatePinDisplay();
+    </script>
+</body>
+</html>

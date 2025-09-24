@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Exportar Historial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); }
+        .header { background: var(--surface-primary); padding: 60px 20px 20px; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+        .header-content { position: relative; z-index: 1; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.9); font-size: 16px; font-weight: 600; cursor: pointer; }
+        .back-btn:hover { color: white; }
+        .title { text-align: center; }
+        .title-main { font-size: 20px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .content { padding: 24px 20px; }
+        
+        .section { margin-bottom: 24px; }
+        .section-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        
+        .period-section { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .period-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .date-inputs { display: flex; gap: 12px; }
+        .date-input-group { flex: 1; }
+        .date-label { font-size: 12px; font-weight: 600; color: var(--foreground); margin-bottom: 8px; }
+        .date-input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; color: var(--foreground); background: var(--surface-card); transition: all 0.3s ease; position: relative; }
+        .date-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1); }
+        
+        .report-type-section { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .report-type-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .checkbox-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .checkbox-item:last-child { margin-bottom: 0; }
+        .checkbox-label { font-size: 14px; font-weight: 600; color: var(--foreground); }
+        .checkbox-toggle { width: 48px; height: 24px; border-radius: 12px; position: relative; cursor: pointer; transition: all 0.3s ease; }
+        .checkbox-toggle.active { background: var(--success); }
+        .checkbox-toggle.inactive { background: #e2e8f0; }
+        .toggle-knob { width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; top: 2px; left: 2px; transition: transform 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .checkbox-toggle.active .toggle-knob { transform: translateX(24px); }
+        
+        .format-section { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .format-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .format-option { display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s ease; }
+        .format-option:last-child { margin-bottom: 0; }
+        .format-option:hover { border-color: var(--primary); background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); }
+        .format-option.active { border-color: var(--primary); background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); }
+        .format-radio { width: 20px; height: 20px; border: 2px solid #e2e8f0; border-radius: 50%; position: relative; }
+        .format-option.active .format-radio { border-color: var(--primary); background: var(--primary); }
+        .format-option.active .format-radio::after { content: ''; width: 8px; height: 8px; background: white; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .format-text { font-size: 14px; font-weight: 600; color: var(--foreground); }
+        .format-description { font-size: 12px; color: #64748b; }
+        
+        .preview-section { background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; }
+        .preview-stats { font-size: 14px; color: #64748b; line-height: 1.6; }
+        .preview-item { margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .preview-item:last-child { margin-bottom: 0; }
+        .preview-value { font-weight: 700; color: var(--primary); }
+        
+        .generate-btn { background: var(--surface-primary); color: white; padding: 16px 24px; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-bottom: 20px; text-align: center; }
+        .generate-btn:hover { transform: translateY(-2px); }
+        
+        .email-section { background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+        .email-checkbox { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .email-input { background: transparent; border: none; outline: none; font-size: 14px; color: #64748b; flex: 1; }
+        
+        .info-note { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid var(--warning); border-radius: var(--radius); padding: 16px; display: flex; align-items: center; gap: 12px; }
+        .info-note-text { font-size: 14px; color: #92400e; font-weight: 500; line-height: 1.4; }
+        
+        .theme-label { position: absolute; top: 12px; right: 12px; background: var(--primary); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">BLUE</div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="back-btn">
+                            <i data-lucide="arrow-left" size="20"></i>
+                            <span>Exportar Historial</span>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <div class="title-main">
+                            <i data-lucide="bar-chart-3" size="24"></i>
+                            <span>Generar Reporte</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="calendar" size="20"></i>
+                        Seleccionar Período
+                    </div>
+                    <div class="period-section">
+                        <div class="date-inputs">
+                            <div class="date-input-group">
+                                <div class="date-label">Desde:</div>
+                                <input type="date" class="date-input" value="2024-09-01">
+                            </div>
+                            <div class="date-input-group">
+                                <div class="date-label">Hasta:</div>
+                                <input type="date" class="date-input" value="2024-09-15">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="clipboard-list" size="20"></i>
+                        Tipo de Reporte
+                    </div>
+                    <div class="report-type-section">
+                        <div class="checkbox-item">
+                            <div class="checkbox-label">Sesiones de parqueo</div>
+                            <div class="checkbox-toggle active">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+                        <div class="checkbox-item">
+                            <div class="checkbox-label">Transacciones de compra</div>
+                            <div class="checkbox-toggle active">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+                        <div class="checkbox-item">
+                            <div class="checkbox-label">Resumen financiero</div>
+                            <div class="checkbox-toggle active">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+                        <div class="checkbox-item">
+                            <div class="checkbox-label">Datos personales</div>
+                            <div class="checkbox-toggle inactive">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="file-text" size="20"></i>
+                        Formato de Exportación
+                    </div>
+                    <div class="format-section">
+                        <div class="format-option active">
+                            <div class="format-radio"></div>
+                            <div>
+                                <div class="format-text">PDF (Reporte visual)</div>
+                                <div class="format-description">Ideal para presentaciones</div>
+                            </div>
+                        </div>
+                        <div class="format-option">
+                            <div class="format-radio"></div>
+                            <div>
+                                <div class="format-text">Excel (Para análisis)</div>
+                                <div class="format-description">Datos editables</div>
+                            </div>
+                        </div>
+                        <div class="format-option">
+                            <div class="format-radio"></div>
+                            <div>
+                                <div class="format-text">CSV (Para importar)</div>
+                                <div class="format-description">Compatibilidad universal</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="eye" size="20"></i>
+                        Vista Previa
+                    </div>
+                    <div class="preview-section">
+                        <div class="preview-stats">
+                            <div class="preview-item">
+                                <span>Período:</span>
+                                <span class="preview-value">15 días</span>
+                            </div>
+                            <div class="preview-item">
+                                <span>Sesiones:</span>
+                                <span class="preview-value">12</span>
+                            </div>
+                            <div class="preview-item">
+                                <span>Total gastado:</span>
+                                <span class="preview-value">L 180.00</span>
+                            </div>
+                            <div class="preview-item">
+                                <span>Tiempo total:</span>
+                                <span class="preview-value">6h 45m</span>
+                            </div>
+                            <div class="preview-item">
+                                <span>Promedio/sesión:</span>
+                                <span class="preview-value">L 15.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="generate-btn">
+                    <i data-lucide="download" size="20" style="margin-right: 8px;"></i>
+                    Generar y Descargar
+                </button>
+
+                <div class="email-section">
+                    <div class="email-checkbox">
+                        <div class="checkbox-toggle active">
+                            <div class="toggle-knob"></div>
+                        </div>
+                        <span style="font-size: 14px; font-weight: 600; color: #64748b;">También enviar por email</span>
+                    </div>
+                    <input type="email" class="email-input" value="juan@email.com" readonly>
+                </div>
+
+                <div class="info-note">
+                    <i data-lucide="info" size="20" color="#d97706"></i>
+                    <div class="info-note-text">El archivo estará disponible por 30 días en tu perfil</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+        
+        // Toggle functionality
+        document.querySelectorAll('.checkbox-toggle, .format-option').forEach(element => {
+            element.addEventListener('click', () => {
+                if (element.classList.contains('checkbox-toggle')) {
+                    element.classList.toggle('active');
+                    element.classList.toggle('inactive');
+                } else {
+                    document.querySelectorAll('.format-option').forEach(option => {
+                        option.classList.remove('active');
+                    });
+                    element.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

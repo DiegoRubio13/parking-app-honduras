@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - QR Display</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --blue-50: #eff6ff;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); padding: 20px; display: flex; flex-direction: column; }
+        .header { display: flex; align-items: center; padding: 20px 0 40px; }
+        .back-button { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .back-button:hover { border-color: var(--primary); transform: scale(1.05); }
+        .header-title { font-size: 18px; font-weight: 700; color: var(--foreground); margin-left: 16px; }
+        .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .instruction-text { font-size: 16px; color: var(--foreground); margin-bottom: 32px; line-height: 1.5; }
+        .qr-container { background: var(--surface-card); border: 3px solid var(--primary); border-radius: 24px; padding: 32px; margin-bottom: 24px; box-shadow: var(--shadow-lg); position: relative; }
+        .qr-code { width: 240px; height: 240px; background: white; border: 2px solid var(--primary); border-radius: 16px; margin: 0 auto; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 8px 24px rgba(29, 78, 216, 0.2); }
+        .qr-pattern { display: grid; grid-template-columns: repeat(11, 1fr); gap: 2px; width: 200px; height: 200px; }
+        .qr-dot { background: var(--primary); border-radius: 2px; }
+        .qr-dot.empty { background: transparent; }
+        .qr-code-text { font-family: var(--font-mono); font-size: 14px; color: var(--primary); margin: 24px 0; letter-spacing: 1px; font-weight: 600; background: var(--blue-50); padding: 10px 20px; border-radius: 20px; display: inline-block; }
+        .status-info { margin-bottom: 24px; }
+        .status-row { font-size: 16px; color: var(--foreground); margin-bottom: 8px; }
+        .brightness-card { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: var(--radius); padding: 16px; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: #92400e; }
+        .home-button { background: var(--surface-primary); color: white; padding: 16px 32px; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .home-button:hover { transform: translateY(-2px); }
+        .theme-label { position: absolute; top: 12px; right: 12px; background: var(--primary); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">QR FULL</div>
+        <div class="screen">
+            <div class="header">
+                <div class="back-button">
+                    <i data-lucide="arrow-left" size="20" color="#1d4ed8"></i>
+                </div>
+                <div class="header-title">Mi QR Code</div>
+            </div>
+            
+            <div class="main-content">
+                <div class="instruction-text">
+                    Muestra este código al<br>
+                    guardia para entrar/salir
+                </div>
+                
+                <div class="qr-container">
+                    <div class="qr-code">
+                        <div class="qr-pattern">
+                            <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div>
+                            <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div>
+                            <div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div>
+                            <div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div>
+                            <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div>
+                            <div class="qr-dot empty"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                            <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot empty"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="qr-code-text">PARKING_USER_50498765</div>
+                
+                <div class="status-info">
+                    <div class="status-row">Estado: Fuera del estacionamiento</div>
+                    <div class="status-row">Saldo: 150 minutos</div>
+                </div>
+                
+                <div class="brightness-card">
+                    <i data-lucide="sun" size="20"></i>
+                    Brillo MAX
+                </div>
+                
+                <button class="home-button">Regresar a inicio</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

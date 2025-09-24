@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Scanner Guardia</title>
+    <style>
+        /* Variables de colores */
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #50C878;
+            --alert-color: #FF6B6B;
+            --warning-color: #FFA500;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --background: #F8F9FA;
+            --white: #FFFFFF;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --dark-overlay: rgba(0,0,0,0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Container principal simulando móvil */
+        .mobile-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: var(--white);
+            min-height: 100vh;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header del guardia */
+        .guard-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #5ba0f2 100%);
+            color: var(--white);
+            padding: 50px 20px 20px;
+            position: relative;
+            text-align: center;
+        }
+
+        .guard-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .guard-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .shift-status {
+            background: var(--secondary-color);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .scanner-title {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* Área de la cámara */
+        .camera-container {
+            position: relative;
+            height: 400px;
+            background: #000;
+            margin: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera-view {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #333 25%, #555 25%, #555 50%, #333 50%, #333 75%, #555 75%);
+            background-size: 20px 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--dark-overlay);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scanning-frame {
+            width: 250px;
+            height: 250px;
+            border: 3px solid var(--secondary-color);
+            border-radius: 15px;
+            position: relative;
+            background: transparent;
+        }
+
+        .scanning-frame::before,
+        .scanning-frame::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 4px solid var(--secondary-color);
+        }
+
+        .scanning-frame::before {
+            top: -4px;
+            left: -4px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .scanning-frame::after {
+            bottom: -4px;
+            right: -4px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, var(--secondary-color) 50%, transparent 100%);
+            animation: scanAnimation 2s infinite;
+            box-shadow: 0 0 10px var(--secondary-color);
+        }
+
+        @keyframes scanAnimation {
+            0% { top: 0; }
+            50% { top: calc(100% - 3px); }
+            100% { top: 0; }
+        }
+
+        .scan-instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--white);
+            text-align: center;
+            font-size: 14px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 15px;
+            border-radius: 20px;
+        }
+
+        /* Resultado del escaneo */
+        .scan-result {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .scan-result.success {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f9f0 100%);
+            border: 2px solid var(--secondary-color);
+            display: block;
+        }
+
+        .scan-result.warning {
+            background: linear-gradient(135deg, #fff8e1 0%, #fffbf0 100%);
+            border: 2px solid var(--warning-color);
+            display: block;
+        }
+
+        .scan-result.error {
+            background: linear-gradient(135deg, #ffebee 0%, #fef5f5 100%);
+            border: 2px solid var(--alert-color);
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .result-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 15px;
+            color: var(--white);
+        }
+
+        .success .result-icon { background: var(--secondary-color); }
+        .warning .result-icon { background: var(--warning-color); }
+        .error .result-icon { background: var(--alert-color); }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .user-info {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .user-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .user-detail:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Botones de acción */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-reject {
+            background: var(--alert-color);
+            color: var(--white);
+        }
+
+        .btn-confirm:hover {
+            background: #45b86b;
+            transform: translateY(-1px);
+        }
+
+        .btn-reject:hover {
+            background: #ff5252;
+            transform: translateY(-1px);
+        }
+
+        /* Estadísticas rápidas */
+        .quick-stats {
+            display: flex;
+            justify-content: space-around;
+            background: var(--white);
+            margin: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Bottom bar para guardia */
+        .guard-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 375px;
+            background: var(--white);
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .emergency-button {
+            background: var(--alert-color);
+            color: var(--white);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 375px) {
+            .mobile-container {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Header del guardia -->
+        <div class="guard-header">
+            <div class="guard-info">
+                <div class="guard-name">Guardia: Juan Pérez</div>
+                <div class="shift-status">EN TURNO</div>
+            </div>
+            <div class="scanner-title">Scanner QR Activo</div>
+        </div>
+
+        <!-- Cámara scanner -->
+        <div class="camera-container">
+            <div class="camera-view">
+                📹 Vista de cámara activa
+                <div class="camera-overlay">
+                    <div class="scanning-frame">
+                        <div class="scan-line"></div>
+                    </div>
+                </div>
+                <div class="scan-instructions">
+                    Posiciona el código QR dentro del marco
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultado del escaneo -->
+        <div class="scan-result success" id="scanResult">
+            <div class="result-header">
+                <div class="result-icon">✓</div>
+                <div class="result-title">Usuario Verificado</div>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-detail">
+                    <span class="detail-label">Usuario:</span>
+                    <span class="detail-value">María González</span>
+                </div>
+                <div class="user-detail">
+                    <span class="detail-label">Teléfono:</span>
+                    <span class="detail-value">+52 55 1234 5678</span>
+                </div>
+                <div class="user-detail">
+                    <span class="detail-label">Saldo:</span>
+                    <span class="detail-value" style="color: var(--secondary-color);">45 minutos</span>
+                </div>
+                <div class="user-detail">
+                    <span class="detail-label">Estado:</span>
+                    <span class="detail-value" style="color: var(--alert-color);">AFUERA</span>
+                </div>
+                <div class="user-detail">
+                    <span class="detail-label">Última entrada:</span>
+                    <span class="detail-value">Hace 2 horas</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-button btn-confirm" onclick="confirmEntry()">
+                    ✓ Registrar Entrada
+                </button>
+                <button class="action-button btn-reject" onclick="rejectEntry()">
+                    ✗ Rechazar
+                </button>
+            </div>
+        </div>
+
+        <!-- Estadísticas rápidas -->
+        <div class="quick-stats">
+            <div class="stat-item">
+                <div class="stat-number">23</div>
+                <div class="stat-label">Autos Adentro</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">156</div>
+                <div class="stat-label">Hoy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">08:30</div>
+                <div class="stat-label">Turno</div>
+            </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="guard-bottom-bar">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>Scanner Activo</span>
+            </div>
+            <button class="emergency-button" onclick="triggerEmergency()">
+                🚨 Emergencia
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let scanResults = [
+            {
+                type: 'success',
+                user: 'María González',
+                phone: '+52 55 1234 5678',
+                balance: 45,
+                status: 'AFUERA',
+                lastEntry: 'Hace 2 horas',
+                action: 'Registrar Entrada'
+            },
+            {
+                type: 'warning',
+                user: 'Carlos Rodríguez',
+                phone: '+52 55 9876 5432',
+                balance: 5,
+                status: 'ADENTRO',
+                lastEntry: 'Hace 3 minutos',
+                action: 'Registrar Salida'
+            },
+            {
+                type: 'error',
+                user: 'Ana Martínez',
+                phone: '+52 55 5555 1234',
+                balance: 0,
+                status: 'ADENTRO',
+                lastEntry: 'Hace 1 hora',
+                action: 'Solicitar Pago'
+            }
+        ];
+
+        let currentResultIndex = 0;
+
+        function showScanResult(result) {
+            const scanResult = document.getElementById('scanResult');
+            
+            // Ocultar resultado actual
+            scanResult.style.display = 'none';
+            scanResult.className = 'scan-result';
+            
+            setTimeout(() => {
+                // Configurar nuevo resultado
+                scanResult.classList.add(result.type);
+                
+                // Actualizar icono y título
+                const icon = result.type === 'success' ? '✓' : result.type === 'warning' ? '⚠' : '✗';
+                const title = result.type === 'success' ? 'Usuario Verificado' : 
+                             result.type === 'warning' ? 'Saldo Bajo' : 'Sin Saldo';
+                
+                scanResult.querySelector('.result-icon').textContent = icon;
+                scanResult.querySelector('.result-title').textContent = title;
+                
+                // Actualizar información del usuario
+                const userDetails = scanResult.querySelectorAll('.detail-value');
+                userDetails[0].textContent = result.user;
+                userDetails[1].textContent = result.phone;
+                userDetails[2].textContent = `${result.balance} minutos`;
+                userDetails[2].style.color = result.balance > 10 ? 'var(--secondary-color)' : 'var(--alert-color)';
+                userDetails[3].textContent = result.status;
+                userDetails[3].style.color = result.status === 'ADENTRO' ? 'var(--secondary-color)' : 'var(--alert-color)';
+                userDetails[4].textContent = result.lastEntry;
+                
+                // Actualizar botón de acción
+                const confirmButton = scanResult.querySelector('.btn-confirm');
+                confirmButton.textContent = `✓ ${result.action}`;
+                
+                // Mostrar resultado
+                scanResult.style.display = 'block';
+            }, 300);
+        }
+
+        function confirmEntry() {
+            alert('Entrada/salida registrada correctamente');
+            // Simular nuevo escaneo después de 2 segundos
+            setTimeout(simulateScan, 2000);
+        }
+
+        function rejectEntry() {
+            alert('Acceso rechazado');
+            // Simular nuevo escaneo después de 2 segundos
+            setTimeout(simulateScan, 2000);
+        }
+
+        function simulateScan() {
+            // Ocultar resultado actual
+            document.getElementById('scanResult').style.display = 'none';
+            
+            // Simular tiempo de escaneo
+            setTimeout(() => {
+                currentResultIndex = (currentResultIndex + 1) % scanResults.length;
+                showScanResult(scanResults[currentResultIndex]);
+            }, 1500);
+        }
+
+        function triggerEmergency() {
+            if (confirm('¿Activar alerta de emergencia?')) {
+                alert('🚨 Emergencia activada. Notificando a administradores...');
+            }
+        }
+
+        // Simular escaneos automáticos cada 10 segundos
+        setInterval(simulateScan, 10000);
+
+        // Mostrar primer resultado después de 2 segundos
+        setTimeout(() => {
+            showScanResult(scanResults[0]);
+        }, 2000);
+
+        // Actualizar estadísticas cada 30 segundos
+        setInterval(() => {
+            const statsNumbers = document.querySelectorAll('.stat-number');
+            statsNumbers[0].textContent = Math.floor(Math.random() * 50) + 10;
+            statsNumbers[1].textContent = Math.floor(Math.random() * 200) + 100;
+        }, 30000);
+    </script>
+</body>
+</html>

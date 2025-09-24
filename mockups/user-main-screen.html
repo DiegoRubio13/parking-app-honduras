@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Usuario Principal</title>
+    <style>
+        /* Variables de colores */
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #50C878;
+            --alert-color: #FF6B6B;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --background: #F8F9FA;
+            --white: #FFFFFF;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Container principal simulando móvil */
+        .mobile-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: var(--white);
+            min-height: 100vh;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 50px 20px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Estado del usuario */
+        .status-section {
+            padding: 30px 20px;
+            text-align: center;
+            background: var(--white);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .status-inside {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .status-outside {
+            background: var(--alert-color);
+            color: var(--white);
+        }
+
+        /* Saldo de minutos */
+        .balance-section {
+            background: var(--background);
+            padding: 20px;
+            margin: 0 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .balance-amount {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .balance-unit {
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+        /* Código QR */
+        .qr-section {
+            padding: 0 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .qr-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .qr-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .qr-code {
+            width: 250px;
+            height: 250px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDI1MCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTAiIGhlaWdodD0iMjUwIiBmaWxsPSJ3aGl0ZSIvPgo8IS0tIFNpbXVsYWNpw7NuIGRlIGPDs2RpZ28gUVIgLS0+CjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjcwIiBmaWxsPSJibGFjayIvPgo8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgZmlsbD0id2hpdGUiLz4KPHJlY3QgeD0iMzAiIHk9IjMwIiB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIGZpbGw9ImJsYWNrIi8+CjxyZWN0IHg9IjE3MCIgeT0iMTAiIHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCIgZmlsbD0iYmxhY2siLz4KPHJlY3QgeD0iMTgwIiB5PSIyMCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJ3aGl0ZSIvPgo8cmVjdCB4PSIxOTAiIHk9IjMwIiB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIGZpbGw9ImJsYWNrIi8+CjxyZWN0IHg9IjEwIiB5PSIxNzAiIHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCIgZmlsbD0iYmxhY2siLz4KPHJlY3QgeD0iMjAiIHk9IjE4MCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJ3aGl0ZSIvPgo8cmVjdCB4PSIzMCIgeT0iMTkwIiB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIGZpbGw9ImJsYWNrIi8+CjwhLS0gUGF0csOzbiByYW5kb20gZGUgUVIgLS0+CjxyZWN0IHg9IjEwMCIgeT0iMzAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz4KPHJlY3QgeD0iMTIwIiB5PSIzMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPgo8cmVjdCB4PSIxNDAiIHk9IjMwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+CjxyZWN0IHg9IjkwIiB5PSI1MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPgo8IS0tIE3DoXMgcGF0cm9uZXMgZGUgUVIgLS0+CjxyZWN0IHg9IjEwMCIgeT0iMTAwIiB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9ImJsYWNrIi8+CjxyZWN0IHg9IjExMCIgeT0iMTEwIiB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHg9IjEyMCIgeT0iMTIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+CjwvZXZnPgo=') no-repeat center;
+            background-size: contain;
+            border: 2px solid #e0e0e0;
+        }
+
+        .qr-instruction {
+            font-size: 14px;
+            color: var(--text-light);
+            max-width: 250px;
+        }
+
+        /* Botón principal */
+        .main-button {
+            margin: 0 20px;
+            background: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            padding: 18px 30px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            width: calc(100% - 40px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .main-button:hover {
+            background: #45b86b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
+        }
+
+        /* Bottom navigation simulado */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 375px;
+            background: var(--white);
+            padding: 15px 0 25px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 12px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin: 0 auto 5px;
+            background: currentColor;
+            -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMgMTJIMjEiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0zIDZIMjEiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0zIDE4SDIxIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K') no-repeat center;
+            mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMgMTJIMjEiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0zIDZIMjEiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik0zIDE4SDIxIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K') no-repeat center;
+        }
+
+        /* Responsive */
+        @media (max-width: 375px) {
+            .mobile-container {
+                margin: 0;
+                box-shadow: none;
+            }
+            
+            .qr-code {
+                width: 220px;
+                height: 220px;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .status-inside {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">ParKing</div>
+            <div class="subtitle">Tu estacionamiento inteligente</div>
+        </div>
+
+        <!-- Estado del usuario -->
+        <div class="status-section">
+            <div class="status-badge status-inside" id="statusBadge">
+                ESTÁS ADENTRO
+            </div>
+        </div>
+
+        <!-- Saldo de minutos -->
+        <div class="balance-section">
+            <div class="balance-label">Tu saldo actual</div>
+            <div class="balance-amount">
+                <span id="minutesBalance">45</span>
+                <span class="balance-unit">min</span>
+            </div>
+        </div>
+
+        <!-- Código QR -->
+        <div class="qr-section">
+            <div class="qr-title">Muestra este código al guardia</div>
+            <div class="qr-container">
+                <div class="qr-code" id="qrCode"></div>
+            </div>
+            <div class="qr-instruction">
+                El guardia escaneará este código para registrar tu entrada o salida
+            </div>
+        </div>
+
+        <!-- Botón principal -->
+        <button class="main-button" onclick="goToPurchase()">
+            Comprar Más Minutos
+        </button>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-items">
+                <div class="nav-item active">
+                    <div class="nav-icon"></div>
+                    <div>Inicio</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"></div>
+                    <div>Historial</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"></div>
+                    <div>Perfil</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de estados
+        function toggleStatus() {
+            const badge = document.getElementById('statusBadge');
+            if (badge.textContent === 'ESTÁS ADENTRO') {
+                badge.textContent = 'ESTÁS AFUERA';
+                badge.className = 'status-badge status-outside';
+            } else {
+                badge.textContent = 'ESTÁS ADENTRO';
+                badge.className = 'status-badge status-inside';
+            }
+        }
+
+        function goToPurchase() {
+            alert('Navegando a pantalla de compra de minutos...');
+        }
+
+        // Auto-update del saldo (simulación)
+        let balance = 45;
+        setInterval(() => {
+            if (document.getElementById('statusBadge').textContent === 'ESTÁS ADENTRO') {
+                balance = Math.max(0, balance - 1);
+                document.getElementById('minutesBalance').textContent = balance;
+                
+                if (balance <= 10) {
+                    document.querySelector('.balance-amount').style.color = '#FF6B6B';
+                }
+            }
+        }, 60000); // Cada minuto
+
+        // Click en estado para demo
+        document.getElementById('statusBadge').addEventListener('click', toggleStatus);
+    </script>
+</body>
+</html>

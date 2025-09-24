@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Mi QR Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); }
+        .header { background: var(--surface-primary); padding: 60px 20px 20px; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+        .header-content { position: relative; z-index: 1; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.9); font-size: 16px; font-weight: 600; cursor: pointer; }
+        .back-btn:hover { color: white; }
+        .title { text-align: center; }
+        .title-main { font-size: 20px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .content { padding: 24px 20px; }
+        
+        .qr-container { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; text-align: center; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .qr-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .qr-label { font-size: 14px; color: #64748b; margin-bottom: 16px; }
+        .qr-visual { width: 200px; height: 200px; margin: 0 auto 16px; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--blue-200); }
+        .qr-pattern { font-family: monospace; font-size: 10px; line-height: 1; color: var(--primary); text-align: center; white-space: pre; }
+        .qr-code { font-size: 14px; font-weight: 700; color: var(--foreground); font-family: 'JetBrains Mono', monospace; margin-top: 12px; }
+        
+        .config-section { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .config-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .section-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        
+        .config-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .config-item:last-child { margin-bottom: 0; }
+        .config-label { font-size: 14px; font-weight: 600; color: var(--foreground); }
+        .config-toggle { width: 48px; height: 24px; border-radius: 12px; position: relative; cursor: pointer; transition: all 0.3s ease; }
+        .config-toggle.active { background: var(--success); }
+        .config-toggle.inactive { background: #e2e8f0; }
+        .toggle-knob { width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; top: 2px; left: 2px; transition: transform 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .config-toggle.active .toggle-knob { transform: translateX(24px); }
+        
+        .regenerate-section { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid var(--warning); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; }
+        .regenerate-section .section-title { color: #92400e; }
+        .regenerate-description { font-size: 14px; color: #92400e; line-height: 1.5; margin-bottom: 16px; }
+        .regenerate-btn { background: var(--warning); color: white; padding: 12px 24px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .regenerate-btn:hover { transform: translateY(-1px); }
+        
+        .export-section { margin-bottom: 20px; }
+        .export-buttons { display: flex; gap: 12px; }
+        .export-btn { flex: 1; padding: 12px 16px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-share { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: var(--primary); }
+        .btn-save { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: var(--success); }
+        .export-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        
+        .security-note { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border: 2px solid var(--error); border-radius: var(--radius); padding: 16px; display: flex; align-items: flex-start; gap: 12px; }
+        .security-note-text { font-size: 14px; color: #991b1b; font-weight: 500; line-height: 1.4; }
+        
+        .theme-label { position: absolute; top: 12px; right: 12px; background: var(--primary); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">BLUE</div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="back-btn">
+                            <i data-lucide="arrow-left" size="20"></i>
+                            <span>Mi QR Code</span>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <div class="title-main">
+                            <i data-lucide="smartphone" size="24"></i>
+                            <span>Configurar QR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="qr-container">
+                    <div class="qr-label">Tu código actual:</div>
+                    <div class="qr-visual">
+                        <div class="qr-pattern">████ ██   ███ ████
+█  █ ██ █ █ █ █  █
+████  █ ██  █ ████
+█  █  █  ███  █  █
+████ ███ ███ ████</div>
+                    </div>
+                    <div class="qr-code">PARKING_USER_50498765</div>
+                </div>
+
+                <div class="config-section">
+                    <div class="section-title">
+                        <i data-lucide="settings" size="20"></i>
+                        Configuración
+                    </div>
+                    <div class="config-item">
+                        <div class="config-label">Brillo automático</div>
+                        <div class="config-toggle active">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                    <div class="config-item">
+                        <div class="config-label">Vibración al mostrar</div>
+                        <div class="config-toggle active">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                    <div class="config-item">
+                        <div class="config-label">Sonido de confirmación</div>
+                        <div class="config-toggle active">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                    <div class="config-item">
+                        <div class="config-label">Protección con PIN</div>
+                        <div class="config-toggle inactive">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="regenerate-section">
+                    <div class="section-title">
+                        <i data-lucide="refresh-cw" size="20"></i>
+                        Regenerar Código
+                    </div>
+                    <div class="regenerate-description">
+                        Por seguridad, puedes regenerar tu código QR. El anterior dejará de funcionar.
+                    </div>
+                    <button class="regenerate-btn">
+                        <i data-lucide="refresh-cw" size="16"></i>
+                        <span>Regenerar QR</span>
+                    </button>
+                </div>
+
+                <div class="export-section">
+                    <div class="section-title">
+                        <i data-lucide="download" size="20"></i>
+                        Exportar
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn btn-share">
+                            <i data-lucide="share-2" size="16"></i>
+                            <span>Compartir</span>
+                        </button>
+                        <button class="export-btn btn-save">
+                            <i data-lucide="save" size="16"></i>
+                            <span>Guardar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="security-note">
+                    <i data-lucide="alert-triangle" size="20" color="#dc2626"></i>
+                    <div class="security-note-text">Nunca compartas tu QR con personas desconocidas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+        
+        // Toggle functionality
+        document.querySelectorAll('.config-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('active');
+                toggle.classList.toggle('inactive');
+            });
+        });
+    </script>
+</body>
+</html>

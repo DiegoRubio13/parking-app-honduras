@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - QR Scanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); }
+        .header { background: var(--surface-success); padding: 60px 20px 40px; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+        .header-content { position: relative; z-index: 1; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        .header-actions { display: flex; gap: 10px; }
+        .icon-button { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        .icon-button:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+        .content { padding: 24px 20px; }
+        .scanner-card { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: var(--shadow-lg); text-align: center; position: relative; overflow: hidden; }
+        .scanner-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-success); }
+        .scanner-title { font-size: 20px; font-weight: 700; color: var(--success); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .scanner-subtitle { font-size: 16px; font-weight: 600; color: var(--foreground); margin-bottom: 24px; }
+        .scanner-viewfinder { width: 200px; height: 200px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 3px solid var(--success); border-radius: 16px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 8px 24px rgba(5, 150, 105, 0.2); }
+        .viewfinder-corners { position: absolute; inset: -3px; }
+        .corner { position: absolute; width: 24px; height: 24px; border: 3px solid var(--success); }
+        .corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; }
+        .focus-text { font-size: 18px; font-weight: 700; color: var(--success); letter-spacing: 0.5px; }
+        .scanner-controls { display: flex; justify-content: center; gap: 16px; margin-bottom: 24px; }
+        .control-btn { background: var(--surface-card); border: 2px solid var(--blue-200); padding: 12px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
+        .control-btn:hover { border-color: var(--primary); transform: scale(1.05); }
+        .daily-summary { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .daily-summary::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        .summary-title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .summary-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 18px; font-weight: 800; color: var(--primary); }
+        .stat-label { font-size: 12px; color: #64748b; font-weight: 500; }
+        .dashboard-btn { background: var(--surface-primary); color: white; padding: 16px 24px; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; width: 100%; }
+        .dashboard-btn:hover { transform: translateY(-2px); }
+        .theme-label { position: absolute; top: 12px; right: 12px; background: var(--success); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">GUARD</div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="logo">
+                            <i data-lucide="shield-check" size="28"></i>
+                            <span>GUARDIA</span>
+                        </div>
+                        <div class="header-actions">
+                            <div class="icon-button">
+                                <i data-lucide="bar-chart-3" size="20"></i>
+                            </div>
+                            <div class="icon-button">
+                                <i data-lucide="settings" size="20"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="scanner-card">
+                    <div class="scanner-title">
+                        <i data-lucide="camera" size="24"></i>
+                        SCANNER ACTIVO
+                    </div>
+                    
+                    <div class="scanner-viewfinder">
+                        <div class="viewfinder-corners">
+                            <div class="corner tl"></div>
+                            <div class="corner tr"></div>
+                            <div class="corner bl"></div>
+                            <div class="corner br"></div>
+                        </div>
+                        <div class="focus-text">ENFOCA<br>EL QR</div>
+                    </div>
+                    
+                    <div class="scanner-controls">
+                        <button class="control-btn">
+                            <i data-lucide="flashlight" size="16"></i>
+                            Flash
+                        </button>
+                        <button class="control-btn">
+                            <i data-lucide="refresh-cw" size="16"></i>
+                            Cambiar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="daily-summary">
+                    <div class="summary-title">
+                        <i data-lucide="trending-up" size="20"></i>
+                        Resumen del Día
+                    </div>
+                    
+                    <div class="summary-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">23</div>
+                            <div class="stat-label">Entradas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div class="stat-label">Salidas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Adentro ahora</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">L 450</div>
+                            <div class="stat-label">Ingresos</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="dashboard-btn">Ver Dashboard Completo</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

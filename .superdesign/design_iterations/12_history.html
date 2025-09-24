@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --success: #059669;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); padding: 20px; }
+        .header { display: flex; align-items: center; padding: 20px 0 40px; }
+        .back-button { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .back-button:hover { border-color: var(--primary); transform: scale(1.05); }
+        .header-title { font-size: 18px; font-weight: 700; color: var(--foreground); margin-left: 16px; }
+        .filters { display: flex; gap: 12px; margin-bottom: 24px; justify-content: center; }
+        .filter-btn { background: var(--surface-card); border: 2px solid var(--blue-200); padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .filter-btn.active { background: var(--surface-primary); color: white; border-color: var(--primary); }
+        .filter-btn:hover { border-color: var(--primary); transform: scale(1.05); }
+        .history-item { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .history-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+        .history-item.parking::before { background: var(--surface-primary); }
+        .history-item.recharge::before { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .history-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .history-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .history-icon.parking { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: var(--primary); }
+        .history-icon.recharge { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: var(--success); }
+        .history-title { font-size: 16px; font-weight: 700; color: var(--foreground); }
+        .history-details { font-size: 14px; color: #64748b; line-height: 1.4; }
+        .export-btn { background: var(--surface-primary); color: white; padding: 12px 24px; border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin: 24px 0; width: 100%; }
+        .export-btn:hover { transform: translateY(-2px); }
+        .stats-summary { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; margin-top: 24px; text-align: center; }
+        .stats-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .theme-label { position: absolute; top: 12px; right: 12px; background: var(--primary); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">HISTORY</div>
+        <div class="screen">
+            <div class="header">
+                <div class="back-button">
+                    <i data-lucide="arrow-left" size="20" color="#1d4ed8"></i>
+                </div>
+                <div class="header-title">Historial</div>
+            </div>
+            
+            <div class="filters">
+                <button class="filter-btn active">Hoy</button>
+                <button class="filter-btn">Semana</button>
+            </div>
+            
+            <div class="history-item parking">
+                <div class="history-header">
+                    <div class="history-icon parking">
+                        <i data-lucide="car" size="20"></i>
+                    </div>
+                    <div class="history-title">Hoy 14:30 - 15:15</div>
+                </div>
+                <div class="history-details">
+                    Tiempo: 45 min<br>
+                    Tarifa: L 1.50/min<br>
+                    Costo: L 67.50<br>
+                    QR usado ✓
+                </div>
+            </div>
+            
+            <div class="history-item parking">
+                <div class="history-header">
+                    <div class="history-icon parking">
+                        <i data-lucide="car" size="20"></i>
+                    </div>
+                    <div class="history-title">Ayer 09:00 - 09:30</div>
+                </div>
+                <div class="history-details">
+                    Tiempo: 30 min<br>
+                    Tarifa: L 1.50/min<br>
+                    Costo: L 45.00<br>
+                    QR usado ✓
+                </div>
+            </div>
+            
+            <div class="history-item recharge">
+                <div class="history-header">
+                    <div class="history-icon recharge">
+                        <i data-lucide="credit-card" size="20"></i>
+                    </div>
+                    <div class="history-title">Recarga - 15 Ene</div>
+                </div>
+                <div class="history-details">
+                    +120 minutos<br>
+                    Monto: L 35.00
+                </div>
+            </div>
+            
+            <button class="export-btn">Exportar PDF</button>
+            
+            <div class="stats-summary">
+                <div class="stats-title">
+                    <i data-lucide="bar-chart-3" size="20"></i>
+                    Estadísticas
+                </div>
+                <div class="stat-row">
+                    <span>Total gastado:</span>
+                    <span><strong>L 1,120</strong></span>
+                </div>
+                <div class="stat-row">
+                    <span>Sesiones:</span>
+                    <span><strong>45</strong></span>
+                </div>
+                <div class="stat-row">
+                    <span>Tiempo promedio:</span>
+                    <span><strong>32 min</strong></span>
+                </div>
+                <div class="stat-row">
+                    <span>Ahorros con paquetes:</span>
+                    <span><strong>L 45</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Mockups y Diseños</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .mockups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .mockup-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .mockup-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .mockup-card h3 {
+            color: #4A90E2;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mockup-card .icon {
+            font-size: 2rem;
+        }
+
+        .mockup-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .features {
+            list-style: none;
+        }
+
+        .features li {
+            padding: 5px 0;
+            color: #444;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #50C878;
+            font-weight: bold;
+        }
+
+        .view-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4A90E2 0%, #50C878 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .view-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+
+        .documentation-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .documentation-section h2 {
+            color: #4A90E2;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .doc-item {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .doc-item:hover {
+            border-color: #4A90E2;
+            background: #f8fbff;
+        }
+
+        .doc-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .doc-item a {
+            color: #4A90E2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .tech-specs {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .tech-specs h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .spec-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4A90E2;
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .spec-value {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px 0;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .mockups-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📱 ParKing</h1>
+            <p>Mockups y Diseños UI/UX - Sistema de Estacionamiento Inteligente</p>
+        </div>
+
+        <!-- Mockups Grid -->
+        <div class="mockups-grid">
+            <!-- Pantalla Principal Usuario -->
+            <a href="user-main-screen.html" class="mockup-card">
+                <h3><span class="icon">👤</span> Pantalla Principal - Usuario</h3>
+                <p>Interfaz principal donde los usuarios visualizan su código QR, saldo de minutos y estado actual dentro del estacionamiento.</p>
+                <ul class="features">
+                    <li>Código QR prominente (250x250px)</li>
+                    <li>Indicador visual de estado (Adentro/Afuera)</li>
+                    <li>Saldo de minutos en tiempo real</li>
+                    <li>Botón principal para comprar minutos</li>
+                    <li>Animaciones sutiles de feedback</li>
+                </ul>
+                <span class="view-button">Ver Mockup</span>
+            </a>
+
+            <!-- Pantalla de Compra -->
+            <a href="purchase-screen.html" class="mockup-card">
+                <h3><span class="icon">💳</span> Compra de Minutos</h3>
+                <p>Interfaz de compra con paquetes predefinidos, múltiples métodos de pago y diseño optimizado para conversión.</p>
+                <ul class="features">
+                    <li>3 paquetes con precios diferenciados</li>
+                    <li>Destacado del paquete más popular</li>
+                    <li>Cálculo de ahorro automático</li>
+                    <li>Preview del saldo resultante</li>
+                    <li>Múltiples métodos de pago</li>
+                </ul>
+                <span class="view-button">Ver Mockup</span>
+            </a>
+
+            <!-- Scanner Guardia -->
+            <a href="guard-scanner.html" class="mockup-card">
+                <h3><span class="icon">📷</span> Scanner - Guardia</h3>
+                <p>Aplicación especializada para guardias con scanner QR siempre activo y dashboard de información en tiempo real.</p>
+                <ul class="features">
+                    <li>Cámara scanner always-on</li>
+                    <li>Información detallada del usuario</li>
+                    <li>Estados visuales claros (Verde/Amarillo/Rojo)</li>
+                    <li>Botones de acción rápida</li>
+                    <li>Estadísticas de turno en tiempo real</li>
+                </ul>
+                <span class="view-button">Ver Mockup</span>
+            </a>
+
+            <!-- Dashboard Admin -->
+            <a href="admin-dashboard.html" class="mockup-card">
+                <h3><span class="icon">📊</span> Dashboard - Administrador</h3>
+                <p>Panel de control completo con estadísticas, gestión de usuarios activos, ingresos y herramientas administrativas.</p>
+                <ul class="features">
+                    <li>KPIs principales en tiempo real</li>
+                    <li>Lista de usuarios activos scrolleable</li>
+                    <li>Resumen de ingresos por período</li>
+                    <li>Acciones rápidas administrativas</li>
+                    <li>Notificaciones y alertas</li>
+                </ul>
+                <span class="view-button">Ver Mockup</span>
+            </a>
+        </div>
+
+        <!-- Documentación -->
+        <div class="documentation-section">
+            <h2>📚 Documentación y Guías</h2>
+            <div class="doc-grid">
+                <div class="doc-item">
+                    <h4>🎨 Mejores Prácticas UI/UX</h4>
+                    <p>Análisis completo de patrones de diseño, accesibilidad y optimizaciones específicas para aplicaciones de estacionamiento.</p>
+                    <a href="ux-best-practices.md">Leer Documento</a>
+                </div>
+                
+                <div class="doc-item">
+                    <h4>⚛️ Guía de Conversión React Native</h4>
+                    <p>Manual detallado para convertir estos mockups HTML/CSS a componentes nativos de React Native.</p>
+                    <a href="react-native-conversion-guide.md">Ver Guía</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Especificaciones Técnicas -->
+        <div class="tech-specs">
+            <h3>🛠️ Especificaciones Técnicas de Diseño</h3>
+            <div class="spec-grid">
+                <div class="spec-item">
+                    <div class="spec-label">Colores Principales</div>
+                    <div class="spec-value">Primario: #4A90E2<br>Secundario: #50C878<br>Alerta: #FF6B6B</div>
+                </div>
+                
+                <div class="spec-item">
+                    <div class="spec-label">Botones Táctiles</div>
+                    <div class="spec-value">Altura mínima: 60px<br>Área de toque: 44x44px<br>Espaciado: 8px mínimo</div>
+                </div>
+                
+                <div class="spec-item">
+                    <div class="spec-label">Código QR</div>
+                    <div class="spec-value">Tamaño: 250x250px<br>Centrado y prominente<br>Contraste alto</div>
+                </div>
+                
+                <div class="spec-item">
+                    <div class="spec-label">Navegación</div>
+                    <div class="spec-value">Máximo 3 taps por acción<br>Flujos lineales<br>Back navigation clara</div>
+                </div>
+                
+                <div class="spec-item">
+                    <div class="spec-label">Tipografía</div>
+                    <div class="spec-value">Sistema: SF Pro / Roboto<br>Títulos: 20-28px<br>Cuerpo: 14-16px</div>
+                </div>
+                
+                <div class="spec-item">
+                    <div class="spec-label">Responsive</div>
+                    <div class="spec-value">Móvil first<br>Viewport: 320-414px<br>Touch friendly</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2024 ParKing - Sistema de Estacionamiento Inteligente</p>
+            <p>Diseños optimizados para usuarios con conocimiento tecnológico básico</p>
+        </div>
+    </div>
+
+    <script>
+        // Agregar efecto de hover dinámico
+        document.querySelectorAll('.mockup-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) rotateX(5deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) rotateX(0)';
+            });
+        });
+
+        // Mostrar información adicional al hacer clic en especificaciones
+        document.querySelectorAll('.spec-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const label = this.querySelector('.spec-label').textContent;
+                let info = '';
+                
+                switch(label) {
+                    case 'Colores Principales':
+                        info = 'Sistema de colores diseñado para máxima accesibilidad y reconocimiento intuitivo:\n• Azul (#4A90E2): Acciones principales y navegación\n• Verde (#50C878): Estados positivos y confirmaciones\n• Rojo (#FF6B6B): Alertas y advertencias';
+                        break;
+                    case 'Botones Táctiles':
+                        info = 'Diseñados siguiendo las guías de Apple HIG y Material Design:\n• 60px altura asegura fácil interacción\n• Área de toque de 44x44px mínimo\n• Espaciado previene toques accidentales';
+                        break;
+                    case 'Código QR':
+                        info = 'Optimizado para escaneado rápido y confiable:\n• 250x250px garantiza legibilidad\n• Alto contraste para condiciones variables\n• Posición central para fácil localización';
+                        break;
+                    default:
+                        info = 'Especificación técnica del sistema de diseño ParKing';
+                }
+                
+                alert(info);
+            });
+        });
+    </script>
+</body>
+</html>

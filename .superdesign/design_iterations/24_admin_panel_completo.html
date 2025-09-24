@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Panel Administrativo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-admin: linear-gradient(135deg, #7c2d12 0%, #dc2626 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); }
+        .header { background: var(--surface-admin); padding: 60px 20px 20px; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+        .header-content { position: relative; z-index: 1; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.9); font-size: 16px; font-weight: 600; cursor: pointer; }
+        .back-btn:hover { color: white; }
+        .title { text-align: center; }
+        .title-main { font-size: 20px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .subtitle { font-size: 14px; color: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .content { padding: 24px 20px; }
+        
+        .revenue-banner { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid var(--success); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; text-align: center; }
+        .revenue-amount { font-size: 24px; font-weight: 800; color: var(--success); margin-bottom: 4px; }
+        .revenue-growth { font-size: 14px; color: #065f46; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        
+        .overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+        .overview-item { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: 12px; padding: 16px; text-align: center; box-shadow: var(--shadow-md); }
+        .overview-label { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+        .overview-value { font-size: 18px; font-weight: 800; color: var(--primary); }
+        
+        .status-card { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .status-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        .card-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .status-item { font-size: 14px; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .status-item:last-child { margin-bottom: 0; }
+        .status-value { font-weight: 700; color: var(--primary); }
+        
+        .alerts-card { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid var(--warning); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; }
+        .alerts-card .card-title { color: #92400e; }
+        .alert-item { font-size: 14px; color: #92400e; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+        .alert-item:last-child { margin-bottom: 0; }
+        
+        .quick-actions { margin-bottom: 20px; }
+        .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+        .action-btn { background: var(--surface-card); border: 2px solid var(--blue-200); padding: 12px 8px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-md); }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .action-icon { width: 32px; height: 32px; border-radius: 8px; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; background: var(--surface-primary); color: white; }
+        .action-text { font-size: 11px; font-weight: 600; color: var(--foreground); line-height: 1.2; }
+        
+        .chart-card { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .chart-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        .chart-visual { background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 12px; }
+        .chart-bars { font-family: monospace; font-size: 24px; color: var(--primary); margin-bottom: 8px; letter-spacing: 2px; }
+        .chart-label { font-size: 12px; color: #64748b; }
+        
+        .update-footer { background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 16px; text-align: center; }
+        .update-text { font-size: 14px; color: #64748b; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .theme-label { position: absolute; top: 12px; right: 12px; background: #dc2626; color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">ADMIN</div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="back-btn">
+                            <i data-lucide="arrow-left" size="20"></i>
+                            <span>Panel</span>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <div class="title-main">
+                            <i data-lucide="bar-chart-3" size="24"></i>
+                            <span>Panel Administrativo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="revenue-banner">
+                    <div class="revenue-amount">L 4,250</div>
+                    <div class="revenue-growth">
+                        <i data-lucide="trending-up" size="16"></i>
+                        <span>+12.5% vs ayer</span>
+                    </div>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="overview-item">
+                        <div class="overview-label">Sesiones</div>
+                        <div class="overview-value">156</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Usuarios</div>
+                        <div class="overview-value">89</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="overview-label">Ingresos</div>
+                        <div class="overview-value">L 4,250</div>
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <div class="card-title">
+                        <i data-lucide="car" size="20"></i>
+                        Estado en Tiempo Real
+                    </div>
+                    <div class="status-item">
+                        <span>Espacios ocupados:</span>
+                        <span class="status-value">15/25</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Cola de espera:</span>
+                        <span class="status-value">3</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Tiempo promedio:</span>
+                        <span class="status-value">28 min</span>
+                    </div>
+                </div>
+
+                <div class="alerts-card">
+                    <div class="card-title">
+                        <i data-lucide="alert-triangle" size="20"></i>
+                        Alertas del Sistema
+                    </div>
+                    <div class="alert-item">
+                        <span>•</span>
+                        <span>5 usuarios con saldo bajo</span>
+                    </div>
+                    <div class="alert-item">
+                        <span>•</span>
+                        <span>Scanner #2 requiere mantto.</span>
+                    </div>
+                    <div class="alert-item">
+                        <span>•</span>
+                        <span>Conexión lenta detectada</span>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <div class="card-title">
+                        <i data-lucide="zap" size="20"></i>
+                        Accesos Rápidos
+                    </div>
+                    <div class="actions-grid">
+                        <div class="action-btn">
+                            <div class="action-icon">
+                                <i data-lucide="users" size="16"></i>
+                            </div>
+                            <div class="action-text">Usuarios</div>
+                        </div>
+                        <div class="action-btn">
+                            <div class="action-icon">
+                                <i data-lucide="dollar-sign" size="16"></i>
+                            </div>
+                            <div class="action-text">Tarifas</div>
+                        </div>
+                        <div class="action-btn">
+                            <div class="action-icon">
+                                <i data-lucide="shield-check" size="16"></i>
+                            </div>
+                            <div class="action-text">Guardias</div>
+                        </div>
+                        <div class="action-btn">
+                            <div class="action-icon">
+                                <i data-lucide="file-text" size="16"></i>
+                            </div>
+                            <div class="action-text">Reportes</div>
+                        </div>
+                        <div class="action-btn">
+                            <div class="action-icon">
+                                <i data-lucide="settings" size="16"></i>
+                            </div>
+                            <div class="action-text">Config</div>
+                        </div>
+                        <div class="action-btn">
+                            <div class="action-icon">
+                                <i data-lucide="hard-drive" size="16"></i>
+                            </div>
+                            <div class="action-text">Respaldos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="card-title">
+                        <i data-lucide="activity" size="20"></i>
+                        Gráfico de uso (últimas 24h)
+                    </div>
+                    <div class="chart-visual">
+                        <div class="chart-bars">▁▃▅▇█▇▅▃▁</div>
+                        <div class="chart-label">Pico: 16:00</div>
+                    </div>
+                </div>
+
+                <div class="update-footer">
+                    <div class="update-text">
+                        <i data-lucide="refresh-cw" size="16"></i>
+                        <span>Actualizado hace 30s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

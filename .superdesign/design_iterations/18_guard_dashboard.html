@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Guard Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); padding: 20px; }
+        .header { display: flex; align-items: center; padding: 20px 0 32px; }
+        .back-button { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .back-button:hover { border-color: var(--primary); transform: scale(1.05); }
+        .header-title { font-size: 18px; font-weight: 700; color: var(--foreground); margin-left: 16px; }
+        .stats-card { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .stats-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        .stats-title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .stat-item { text-align: center; }
+        .stat-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; }
+        .stat-icon.entries { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: var(--success); }
+        .stat-icon.exits { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: var(--primary); }
+        .stat-icon.inside { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: var(--warning); }
+        .stat-icon.revenue { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #7c3aed; }
+        .stat-value { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: #64748b; font-weight: 500; }
+        .section-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .vehicle-item { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm); transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .vehicle-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--surface-success); }
+        .vehicle-item:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .vehicle-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .vehicle-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .vehicle-info { flex: 1; }
+        .vehicle-name { font-size: 15px; font-weight: 600; color: var(--foreground); }
+        .vehicle-details { font-size: 13px; color: #64748b; line-height: 1.3; }
+        .vehicle-cost { font-size: 14px; font-weight: 700; color: var(--success); text-align: right; }
+        .alerts-section { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid var(--warning); border-radius: var(--radius); padding: 16px; margin-bottom: 24px; }
+        .alerts-title { font-size: 14px; font-weight: 700; color: var(--warning); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .alert-text { font-size: 14px; color: #92400e; }
+        .back-to-scanner { background: var(--surface-success); color: white; padding: 16px 24px; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; width: 100%; }
+        .back-to-scanner:hover { transform: translateY(-2px); }
+        .theme-label { position: absolute; top: 12px; right: 12px; background: var(--success); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">DASHBOARD</div>
+        <div class="screen">
+            <div class="header">
+                <div class="back-button">
+                    <i data-lucide="arrow-left" size="20" color="#1d4ed8"></i>
+                </div>
+                <div class="header-title">Dashboard</div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-title">
+                    <i data-lucide="bar-chart-3" size="20"></i>
+                    Estadísticas de Hoy
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-icon entries">
+                            <i data-lucide="arrow-down-circle" size="20"></i>
+                        </div>
+                        <div class="stat-value">23</div>
+                        <div class="stat-label">Entradas</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon exits">
+                            <i data-lucide="arrow-up-circle" size="20"></i>
+                        </div>
+                        <div class="stat-value">18</div>
+                        <div class="stat-label">Salidas</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon inside">
+                            <i data-lucide="car" size="20"></i>
+                        </div>
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Adentro</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon revenue">
+                            <i data-lucide="dollar-sign" size="20"></i>
+                        </div>
+                        <div class="stat-value">L 1,250</div>
+                        <div class="stat-label">Ingresos</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-title">
+                <i data-lucide="cars" size="20"></i>
+                Vehículos Adentro Ahora:
+            </div>
+            
+            <div class="vehicle-item">
+                <div class="vehicle-header">
+                    <div class="vehicle-avatar">
+                        <i data-lucide="user" size="16" color="#1d4ed8"></i>
+                    </div>
+                    <div class="vehicle-info">
+                        <div class="vehicle-name">Juan Pérez (+504 9876-5432)</div>
+                        <div class="vehicle-details">Entrada: 14:30 (1h 45m)</div>
+                    </div>
+                    <div class="vehicle-cost">L 157.50</div>
+                </div>
+            </div>
+            
+            <div class="vehicle-item">
+                <div class="vehicle-header">
+                    <div class="vehicle-avatar">
+                        <i data-lucide="user" size="16" color="#1d4ed8"></i>
+                    </div>
+                    <div class="vehicle-info">
+                        <div class="vehicle-name">María López (+504 8765-4321)</div>
+                        <div class="vehicle-details">Entrada: 15:45 (30m)</div>
+                    </div>
+                    <div class="vehicle-cost">L 45.00</div>
+                </div>
+            </div>
+            
+            <div class="alerts-section">
+                <div class="alerts-title">
+                    <i data-lucide="alert-triangle" size="16"></i>
+                    Alertas:
+                </div>
+                <div class="alert-text">• 2 usuarios con saldo bajo</div>
+            </div>
+            
+            <button class="back-to-scanner">Volver al Scanner</button>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

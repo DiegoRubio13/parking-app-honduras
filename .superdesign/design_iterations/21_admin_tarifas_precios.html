@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Tarifas y Precios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-admin: linear-gradient(135deg, #7c2d12 0%, #dc2626 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); }
+        .header { background: var(--surface-admin); padding: 60px 20px 20px; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+        .header-content { position: relative; z-index: 1; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.9); font-size: 16px; font-weight: 600; cursor: pointer; }
+        .back-btn:hover { color: white; }
+        .title { text-align: center; }
+        .title-main { font-size: 20px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .content { padding: 24px 20px; }
+        
+        .section { margin-bottom: 24px; }
+        .section-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        
+        .rate-card { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .rate-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .current-rate { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 16px; }
+        .rate-input-group { margin-bottom: 16px; }
+        .input-label { font-size: 14px; font-weight: 600; color: var(--foreground); margin-bottom: 8px; }
+        .rate-input { width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; color: var(--foreground); background: var(--surface-card); transition: all 0.3s ease; }
+        .rate-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1); }
+        
+        .update-btn { background: var(--surface-primary); color: white; padding: 12px 24px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; width: 100%; }
+        .update-btn:hover { transform: translateY(-1px); }
+        
+        .packages-section { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .packages-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .package-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--blue-200); }
+        .package-item:last-child { margin-bottom: 16px; }
+        .package-info { display: flex; align-items: center; gap: 12px; }
+        .package-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--surface-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+        .package-details { }
+        .package-name { font-size: 14px; font-weight: 700; color: var(--foreground); }
+        .package-price { font-size: 16px; font-weight: 800; color: var(--primary); }
+        .edit-btn { padding: 8px 16px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: var(--warning); border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .edit-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        
+        .add-package-btn { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: var(--success); padding: 14px 20px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; width: 100%; }
+        .add-package-btn:hover { transform: translateY(-1px); }
+        
+        .tax-section { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .tax-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .save-changes-btn { background: var(--surface-primary); color: white; padding: 16px 24px; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-bottom: 20px; }
+        .save-changes-btn:hover { transform: translateY(-2px); }
+        
+        .warning-note { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid var(--warning); border-radius: var(--radius); padding: 16px; display: flex; align-items: center; gap: 12px; }
+        .warning-note-text { font-size: 14px; color: #92400e; font-weight: 500; }
+        
+        .theme-label { position: absolute; top: 12px; right: 12px; background: #dc2626; color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">ADMIN</div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="back-btn">
+                            <i data-lucide="arrow-left" size="20"></i>
+                            <span>Tarifas</span>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <div class="title-main">
+                            <i data-lucide="dollar-sign" size="24"></i>
+                            <span>Tarifas y Precios</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="clock" size="20"></i>
+                        Tarifa por minuto
+                    </div>
+                    <div class="rate-card">
+                        <div class="current-rate">Tarifa actual: L 1.50/min</div>
+                        <div class="rate-input-group">
+                            <div class="input-label">Nueva tarifa:</div>
+                            <input type="number" class="rate-input" placeholder="0.00" step="0.01">
+                        </div>
+                        <button class="update-btn">Actualizar</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="package" size="20"></i>
+                        Paquetes de Minutos
+                    </div>
+                    <div class="packages-section">
+                        <div class="package-item">
+                            <div class="package-info">
+                                <div class="package-icon">60</div>
+                                <div class="package-details">
+                                    <div class="package-name">60 min</div>
+                                    <div class="package-price">L 20.00</div>
+                                </div>
+                            </div>
+                            <button class="edit-btn">Editar</button>
+                        </div>
+                        
+                        <div class="package-item">
+                            <div class="package-info">
+                                <div class="package-icon">120</div>
+                                <div class="package-details">
+                                    <div class="package-name">120 min</div>
+                                    <div class="package-price">L 35.00</div>
+                                </div>
+                            </div>
+                            <button class="edit-btn">Editar</button>
+                        </div>
+                        
+                        <div class="package-item">
+                            <div class="package-info">
+                                <div class="package-icon">240</div>
+                                <div class="package-details">
+                                    <div class="package-name">240 min</div>
+                                    <div class="package-price">L 60.00</div>
+                                </div>
+                            </div>
+                            <button class="edit-btn">Editar</button>
+                        </div>
+                        
+                        <button class="add-package-btn">
+                            <i data-lucide="plus" size="16"></i>
+                            Nuevo Paquete
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="building" size="20"></i>
+                        Configuración IVA
+                    </div>
+                    <div class="tax-section">
+                        <div class="current-rate">IVA actual: 15%</div>
+                        <div class="rate-input-group">
+                            <div class="input-label">Nuevo IVA:</div>
+                            <input type="number" class="rate-input" placeholder="15" step="1" min="0" max="100">
+                        </div>
+                        <button class="update-btn">Actualizar</button>
+                    </div>
+                </div>
+
+                <button class="save-changes-btn">Guardar Cambios</button>
+
+                <div class="warning-note">
+                    <i data-lucide="info" size="20" color="#d97706"></i>
+                    <div class="warning-note-text">Cambios aplicarán inmediatamente a todos los usuarios</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

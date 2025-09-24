@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Gestionar Usuarios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-admin: linear-gradient(135deg, #7c2d12 0%, #dc2626 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); }
+        .header { background: var(--surface-admin); padding: 60px 20px 20px; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+        .header-content { position: relative; z-index: 1; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.9); font-size: 16px; font-weight: 600; cursor: pointer; }
+        .back-btn:hover { color: white; }
+        .title { text-align: center; }
+        .title-main { font-size: 20px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .content { padding: 24px 20px; }
+        
+        .search-bar { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-md); }
+        .search-bar input { flex: 1; border: none; outline: none; font-size: 16px; color: var(--foreground); background: transparent; }
+        .search-bar input::placeholder { color: #94a3b8; }
+        
+        .user-card { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .user-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        .user-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); border-color: var(--primary); }
+        
+        .user-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .user-avatar { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 800; font-size: 20px; }
+        .user-info { flex: 1; }
+        .user-name { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 2px; }
+        .user-phone { font-size: 14px; color: #64748b; font-weight: 500; }
+        
+        .user-details { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .user-balance { display: flex; align-items: center; gap: 8px; }
+        .balance-amount { font-weight: 700; color: var(--success); }
+        .status-badge { padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+        .status-active { background: #d1fae5; color: var(--success); }
+        .status-low { background: #fef3c7; color: var(--warning); }
+        .status-inactive { background: #fee2e2; color: var(--error); }
+        
+        .user-sessions { font-size: 14px; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        
+        .user-actions { display: flex; gap: 8px; }
+        .action-btn { padding: 8px 12px; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-view { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: var(--primary); }
+        .btn-edit { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: var(--warning); }
+        .btn-action { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: var(--error); }
+        .btn-activate { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: var(--success); }
+        .action-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        
+        .add-user-btn { background: var(--surface-primary); color: white; padding: 16px; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-bottom: 20px; }
+        .add-user-btn:hover { transform: translateY(-2px); }
+        
+        .user-stats { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .user-stats::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        .stats-title { font-size: 14px; font-weight: 700; color: var(--foreground); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .stats-content { font-size: 14px; color: #64748b; line-height: 1.5; }
+        
+        .theme-label { position: absolute; top: 12px; right: 12px; background: #dc2626; color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">ADMIN</div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="back-btn">
+                            <i data-lucide="arrow-left" size="20"></i>
+                            <span>Gestión</span>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <div class="title-main">
+                            <i data-lucide="users" size="24"></i>
+                            <span>Gestionar Usuarios</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="search-bar">
+                    <i data-lucide="search" size="20" color="#94a3b8"></i>
+                    <input type="text" placeholder="Buscar usuario...">
+                </div>
+
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-avatar">JC</div>
+                        <div class="user-info">
+                            <div class="user-name">Juan Carlos Pérez</div>
+                            <div class="user-phone">+504 9999-9999</div>
+                        </div>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-balance">
+                            <i data-lucide="coins" size="16" color="#059669"></i>
+                            <span class="balance-amount">150 min</span>
+                        </div>
+                        <div class="status-badge status-active">Activo</div>
+                    </div>
+                    <div class="user-sessions">
+                        <i data-lucide="bar-chart-3" size="16"></i>
+                        <span>45 sesiones</span>
+                    </div>
+                    <div class="user-actions">
+                        <button class="action-btn btn-view">Ver</button>
+                        <button class="action-btn btn-edit">Editar</button>
+                        <button class="action-btn btn-action">Suspender</button>
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-avatar">ML</div>
+                        <div class="user-info">
+                            <div class="user-name">María López</div>
+                            <div class="user-phone">+504 8888-8888</div>
+                        </div>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-balance">
+                            <i data-lucide="coins" size="16" color="#d97706"></i>
+                            <span class="balance-amount">25 min</span>
+                        </div>
+                        <div class="status-badge status-low">Saldo Bajo</div>
+                    </div>
+                    <div class="user-sessions">
+                        <i data-lucide="bar-chart-3" size="16"></i>
+                        <span>12 sesiones</span>
+                    </div>
+                    <div class="user-actions">
+                        <button class="action-btn btn-view">Ver</button>
+                        <button class="action-btn btn-edit">Editar</button>
+                        <button class="action-btn btn-action">Suspender</button>
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-avatar">CR</div>
+                        <div class="user-info">
+                            <div class="user-name">Carlos Ruiz</div>
+                            <div class="user-phone">+504 7777-7777</div>
+                        </div>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-balance">
+                            <i data-lucide="coins" size="16" color="#dc2626"></i>
+                            <span class="balance-amount">0 min</span>
+                        </div>
+                        <div class="status-badge status-inactive">Suspendido</div>
+                    </div>
+                    <div class="user-sessions">
+                        <i data-lucide="bar-chart-3" size="16"></i>
+                        <span>89 sesiones</span>
+                    </div>
+                    <div class="user-actions">
+                        <button class="action-btn btn-view">Ver</button>
+                        <button class="action-btn btn-edit">Editar</button>
+                        <button class="action-btn btn-activate">Activar</button>
+                    </div>
+                </div>
+
+                <button class="add-user-btn">
+                    <i data-lucide="user-plus" size="20"></i>
+                    Agregar Usuario
+                </button>
+
+                <div class="user-stats">
+                    <div class="stats-title">
+                        <i data-lucide="pie-chart" size="16"></i>
+                        Estadísticas de Usuarios
+                    </div>
+                    <div class="stats-content">
+                        Total usuarios: 847<br>
+                        <span style="color: var(--success);">✓ Activos: 823</span> • <span style="color: var(--error);">✗ Inactivos: 24</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

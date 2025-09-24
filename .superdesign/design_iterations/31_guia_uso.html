@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Guía de Uso</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); }
+        .header { background: var(--surface-primary); padding: 60px 20px 20px; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+        .header-content { position: relative; z-index: 1; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.9); font-size: 16px; font-weight: 600; cursor: pointer; }
+        .back-btn:hover { color: white; }
+        .title { text-align: center; }
+        .title-main { font-size: 20px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .content { padding: 24px 20px; }
+        
+        .step-section { margin-bottom: 24px; }
+        .step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .step-number { width: 40px; height: 40px; border-radius: 12px; background: var(--surface-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; }
+        .step-title { font-size: 18px; font-weight: 800; color: var(--foreground); }
+        
+        .step-card { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .step-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .step-list { font-size: 14px; color: #64748b; line-height: 1.6; }
+        .step-item { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .step-item:last-child { margin-bottom: 0; }
+        
+        .tips-section { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid var(--success); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; }
+        .tips-title { font-size: 16px; font-weight: 700; color: #065f46; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .tips-list { font-size: 14px; color: #065f46; line-height: 1.6; }
+        .tip-item { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .tip-item:last-child { margin-bottom: 0; }
+        .tip-check { color: var(--success); }
+        .tip-warning { color: var(--warning); }
+        
+        .help-footer { background: var(--surface-primary); color: white; padding: 20px; border-radius: var(--radius); text-align: center; }
+        .help-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .help-phone { font-size: 18px; font-weight: 800; }
+        
+        .theme-label { position: absolute; top: 12px; right: 12px; background: var(--primary); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">BLUE</div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="back-btn">
+                            <i data-lucide="arrow-left" size="20"></i>
+                            <span>Guía de Uso</span>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <div class="title-main">
+                            <i data-lucide="car" size="24"></i>
+                            <span>¿Cómo Funciona?</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="step-section">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">REGISTRO</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-list">
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>Regístrate con tu teléfono</span>
+                            </div>
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>Compra minutos de parqueo</span>
+                            </div>
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>Recibes tu QR personal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-section">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">ENTRADA</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-list">
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>Llega al estacionamiento</span>
+                            </div>
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>Muestra tu QR al guardia</span>
+                            </div>
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>El guardia escanea = ENTRADA</span>
+                            </div>
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>Se inicia tu sesión automát.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-section">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">SALIDA</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-list">
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>Al salir, muestra el mismo QR</span>
+                            </div>
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>El guardia escanea = SALIDA</span>
+                            </div>
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>Se cobra tiempo automático</span>
+                            </div>
+                            <div class="step-item">
+                                <i data-lucide="circle" size="4"></i>
+                                <span>Recibes resumen por email</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-section">
+                    <div class="tips-title">
+                        <i data-lucide="lightbulb" size="20"></i>
+                        Consejos Útiles
+                    </div>
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <i data-lucide="check" size="16" class="tip-check"></i>
+                            <span>Mantén saldo suficiente</span>
+                        </div>
+                        <div class="tip-item">
+                            <i data-lucide="check" size="16" class="tip-check"></i>
+                            <span>QR siempre disponible</span>
+                        </div>
+                        <div class="tip-item">
+                            <i data-lucide="check" size="16" class="tip-check"></i>
+                            <span>Máximo brillo en pantalla</span>
+                        </div>
+                        <div class="tip-item">
+                            <i data-lucide="alert-triangle" size="16" class="tip-warning"></i>
+                            <span>Una sesión activa por cuenta</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-footer">
+                    <div class="help-title">
+                        <i data-lucide="phone" size="20"></i>
+                        <span>¿Necesitas ayuda?</span>
+                    </div>
+                    <div class="help-phone">Llama: 2222-3333</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

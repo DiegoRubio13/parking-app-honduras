@@ -1,0 +1,61 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users collection - users can read/write their own data, admins can read all
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && 
+                     get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'guard'];
+    }
+    
+    // Payment transactions - users can read their own, guards/admins can read all
+    match /paymentTransactions/{transactionId} {
+      allow read: if request.auth != null && 
+                     (resource.data.userId == request.auth.uid || 
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'guard']);
+      allow create: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow update: if request.auth != null && 
+                       get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'guard'];
+    }
+    
+    // Parking sessions - users can read their own, guards/admins can read all
+    match /parkingSessions/{sessionId} {
+      allow read: if request.auth != null && 
+                     (resource.data.userId == request.auth.uid || 
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'guard']);
+      allow create: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow update: if request.auth != null && 
+                       (resource.data.userId == request.auth.uid ||
+                        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'guard']);
+    }
+    
+    // Parking spots - only guards/admins can manage
+    match /parkingSpots/{spotId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'guard'];
+    }
+    
+    // Helper function to check if user exists and get their role
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'admin';
+    }
+    
+    function isGuard() {
+      return isAuthenticated() && getUserRole() in ['admin', 'guard'];
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+  }
+}

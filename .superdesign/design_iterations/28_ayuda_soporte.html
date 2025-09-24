@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Ayuda y Soporte</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); }
+        .header { background: var(--surface-primary); padding: 60px 20px 20px; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+        .header-content { position: relative; z-index: 1; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.9); font-size: 16px; font-weight: 600; cursor: pointer; }
+        .back-btn:hover { color: white; }
+        .title { text-align: center; }
+        .title-main { font-size: 20px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .content { padding: 24px 20px; }
+        
+        .section { margin-bottom: 24px; }
+        .section-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        
+        .faq-section { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .faq-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .faq-item { padding: 12px 0; border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: all 0.3s ease; }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-item:hover { background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); margin: 0 -18px; padding-left: 18px; padding-right: 18px; border-radius: 8px; }
+        .faq-question { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--foreground); font-weight: 600; }
+        
+        .contact-section { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .contact-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .contact-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; font-size: 14px; color: var(--foreground); }
+        .contact-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--surface-primary); color: white; display: flex; align-items: center; justify-content: center; }
+        .contact-text { font-weight: 600; }
+        
+        .report-section { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .report-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .report-textarea { width: 100%; height: 120px; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; color: var(--foreground); background: var(--surface-card); resize: vertical; font-family: var(--font-sans); transition: all 0.3s ease; }
+        .report-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1); }
+        .report-textarea::placeholder { color: #94a3b8; }
+        
+        .report-btn { background: var(--surface-primary); color: white; padding: 12px 20px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .report-btn:hover { transform: translateY(-1px); }
+        
+        .app-info { background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 18px; }
+        .app-info .section-title { color: #64748b; }
+        .info-item { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 8px; }
+        .info-item:last-child { margin-bottom: 12px; }
+        .info-label { color: #64748b; }
+        .info-value { font-weight: 600; color: var(--foreground); }
+        .info-links { display: flex; gap: 16px; }
+        .info-link { color: var(--primary); font-size: 14px; font-weight: 600; cursor: pointer; }
+        .info-link:hover { text-decoration: underline; }
+        
+        .theme-label { position: absolute; top: 12px; right: 12px; background: var(--primary); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">BLUE</div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="back-btn">
+                            <i data-lucide="arrow-left" size="20"></i>
+                            <span>Ayuda</span>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <div class="title-main">
+                            <i data-lucide="help-circle" size="24"></i>
+                            <span>Ayuda y Soporte</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="message-circle" size="20"></i>
+                        Preguntas Frecuentes
+                    </div>
+                    <div class="faq-section">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i data-lucide="chevron-right" size="16"></i>
+                                <span>¿Cómo funciona el QR?</span>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i data-lucide="chevron-right" size="16"></i>
+                                <span>¿Qué pasa si se acaban los minutos durante la sesión?</span>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i data-lucide="chevron-right" size="16"></i>
+                                <span>¿Puedo compartir mi cuenta?</span>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i data-lucide="chevron-right" size="16"></i>
+                                <span>¿Cómo recupero mi PIN?</span>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i data-lucide="chevron-right" size="16"></i>
+                                <span>¿Qué métodos de pago aceptan?</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="phone" size="20"></i>
+                        Contacto
+                    </div>
+                    <div class="contact-section">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i data-lucide="phone" size="16"></i>
+                            </div>
+                            <div class="contact-text">Teléfono: +504 2222-3333</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i data-lucide="mail" size="16"></i>
+                            </div>
+                            <div class="contact-text">Email: ayuda@parking.hn</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i data-lucide="message-circle" size="16"></i>
+                            </div>
+                            <div class="contact-text">Chat en vivo (9am-6pm)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i data-lucide="bug" size="20"></i>
+                        Reportar Problema
+                    </div>
+                    <div class="report-section">
+                        <textarea class="report-textarea" placeholder="Describe el problema que experimentaste..."></textarea>
+                        <button class="report-btn">
+                            <i data-lucide="send" size="16"></i>
+                            <span>Enviar Reporte</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="app-info">
+                    <div class="section-title">
+                        <i data-lucide="info" size="20"></i>
+                        Información de la App
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Versión:</div>
+                        <div class="info-value">1.2.0</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Última actualización:</div>
+                        <div class="info-value">15/09/24</div>
+                    </div>
+                    <div class="info-links">
+                        <div class="info-link">Términos de uso</div>
+                        <div class="info-link">Privacidad</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

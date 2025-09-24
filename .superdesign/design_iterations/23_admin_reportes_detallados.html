@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParKing - Reportes Detallados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --foreground: #1e293b;
+            --primary: #1d4ed8;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --surface-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --surface-admin: linear-gradient(135deg, #7c2d12 0%, #dc2626 100%);
+            --surface-card: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            --surface-elevated: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --blue-200: #bfdbfe;
+            --radius: 16px;
+            --shadow-sm: 0 1px 2px 0 rgb(37 99 235 / 0.08);
+            --shadow-md: 0 4px 6px -1px rgb(37 99 235 / 0.12);
+            --shadow-lg: 0 10px 15px -3px rgb(37 99 235 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(37 99 235 / 0.18);
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--background); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .phone-mockup { width: 375px; height: 812px; background: var(--surface-elevated); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid rgba(203, 213, 225, 0.3); position: relative; }
+        .screen { width: 100%; height: 100%; overflow-y: auto; background: var(--surface-elevated); }
+        .header { background: var(--surface-admin); padding: 60px 20px 20px; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%); pointer-events: none; }
+        .header-content { position: relative; z-index: 1; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.9); font-size: 16px; font-weight: 600; cursor: pointer; }
+        .back-btn:hover { color: white; }
+        .title { text-align: center; }
+        .title-main { font-size: 20px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .content { padding: 24px 20px; }
+        
+        .filter-section { margin-bottom: 24px; }
+        .filter-label { font-size: 14px; font-weight: 700; color: var(--foreground); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 16px; border: 2px solid var(--blue-200); border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; background: var(--surface-card); color: var(--foreground); }
+        .filter-btn.active { background: var(--surface-primary); color: white; border-color: var(--primary); }
+        .filter-btn:hover { border-color: var(--primary); }
+        
+        .report-card { background: var(--surface-card); border: 2px solid var(--blue-200); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+        .report-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--surface-primary); }
+        
+        .card-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .financial-card .card-title { color: var(--success); }
+        .financial-card::before { background: linear-gradient(135deg, var(--success) 0%, #10b981 100%); }
+        .usage-card .card-title { color: var(--primary); }
+        .usage-card::before { background: var(--surface-primary); }
+        .users-card .card-title { color: var(--warning); }
+        .users-card::before { background: linear-gradient(135deg, var(--warning) 0%, #f59e0b 100%); }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .stat-item { }
+        .stat-label { font-size: 13px; color: #64748b; margin-bottom: 4px; }
+        .stat-value { font-size: 16px; font-weight: 800; color: var(--foreground); }
+        .stat-growth { font-size: 12px; color: var(--success); font-weight: 600; margin-top: 2px; }
+        
+        .export-section { margin-bottom: 20px; }
+        .export-buttons { display: flex; gap: 12px; }
+        .export-btn { flex: 1; padding: 12px 16px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-excel { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: var(--success); }
+        .btn-pdf { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: var(--error); }
+        .export-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        
+        .advanced-charts-btn { background: var(--surface-primary); color: white; padding: 16px; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .advanced-charts-btn:hover { transform: translateY(-2px); }
+        
+        .theme-label { position: absolute; top: 12px; right: 12px; background: #dc2626; color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="phone-mockup">
+        <div class="theme-label">ADMIN</div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-top">
+                        <div class="back-btn">
+                            <i data-lucide="arrow-left" size="20"></i>
+                            <span>Reportes</span>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <div class="title-main">
+                            <i data-lucide="bar-chart-3" size="24"></i>
+                            <span>Reportes Detallados</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="filter-section">
+                    <div class="filter-label">
+                        <i data-lucide="calendar" size="16"></i>
+                        Filtros:
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active">Hoy</button>
+                        <button class="filter-btn">Semana</button>
+                        <button class="filter-btn">Mes</button>
+                        <button class="filter-btn">Personalizado</button>
+                    </div>
+                </div>
+
+                <div class="report-card financial-card">
+                    <div class="card-title">
+                        <i data-lucide="dollar-sign" size="20"></i>
+                        Resumen Financiero
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Ingresos totales</div>
+                            <div class="stat-value">L 12,450</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Transacciones</div>
+                            <div class="stat-value">247</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Promedio/sesión</div>
+                            <div class="stat-value">L 50.40</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Crecimiento</div>
+                            <div class="stat-value">+15.6%</div>
+                            <div class="stat-growth">vs semana</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-card usage-card">
+                    <div class="card-title">
+                        <i data-lucide="car" size="20"></i>
+                        Estadísticas de Uso
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Total sesiones</div>
+                            <div class="stat-value">847</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Duración promedio</div>
+                            <div class="stat-value">32 min</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Pico de uso</div>
+                            <div class="stat-value">14:00-16:00</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Ocupación máxima</div>
+                            <div class="stat-value">89%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-card users-card">
+                    <div class="card-title">
+                        <i data-lucide="users" size="20"></i>
+                        Usuarios Activos
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Usuarios únicos</div>
+                            <div class="stat-value">234</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Nuevos registros</div>
+                            <div class="stat-value">12</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Usuarios frecuentes</div>
+                            <div class="stat-value">89</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Tasa retención</div>
+                            <div class="stat-value">78%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-section">
+                    <div class="export-buttons">
+                        <button class="export-btn btn-excel">
+                            <i data-lucide="file-spreadsheet" size="16"></i>
+                            Exportar Excel
+                        </button>
+                        <button class="export-btn btn-pdf">
+                            <i data-lucide="file-text" size="16"></i>
+                            Exportar PDF
+                        </button>
+                    </div>
+                </div>
+
+                <button class="advanced-charts-btn">
+                    <i data-lucide="trending-up" size="20"></i>
+                    <span>Ver gráficos avanzados</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
