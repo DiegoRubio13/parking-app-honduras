@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import CountryPicker, { Country, CountryCode } from 'react-native-country-picker-modal';
 import { PhoneContainer } from '../../components/layout/PhoneContainer';
 import { Button } from '../../components/ui/Button';
 import { theme } from '../../constants/theme';
@@ -26,18 +27,17 @@ interface LoginScreenProps {
   };
 }
 
-// Phone validation for Honduras format
-const validateHondurasPhone = (phone: string): boolean => {
-  // Honduras phone format: 8 digits (removing +504 prefix)
+const validateInternationalPhone = (phone: string, dialCode: string): boolean => {
   const cleanedPhone = phone.replace(/\D/g, '');
-  return cleanedPhone.length === 8;
+  if (cleanedPhone.length < 6 || cleanedPhone.length > 15) {
+    return false;
+  }
+  return true;
 };
 
 const formatPhoneNumber = (text: string): string => {
-  // Remove all non-digits
   const cleaned = text.replace(/\D/g, '');
-  // Limit to 8 digits (Honduras format)
-  return cleaned.length <= 8 ? cleaned : cleaned.slice(0, 8);
+  return cleaned.length <= 15 ? cleaned : cleaned.slice(0, 15);
 };
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
@@ -48,6 +48,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [step, setStep] = useState<'phone' | 'verification'>('phone');
   const [userName, setUserName] = useState<string>('');
   const [showNameInput, setShowNameInput] = useState<boolean>(false);
+  const [countryCode, setCountryCode] = useState<CountryCode>('HN');
+  const [callingCode, setCallingCode] = useState<string>('504');
+  const [showCountryPicker, setShowCountryPicker] = useState<boolean>(false);
   const { sendCode, verifyCode, isLoading } = useAuth();
 
   const handlePhoneChange = (text: string) => {
@@ -61,13 +64,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       return;
     }
 
-    if (!validateHondurasPhone(phoneNumber)) {
-      Alert.alert(t.common.error, t.auth.phoneInvalid);
+    if (!validateInternationalPhone(phoneNumber, callingCode)) {
+      Alert.alert(t.common.error, 'Número de teléfono inválido');
       return;
     }
 
     try {
-      const result = await sendCode(`+504${phoneNumber}`);
+      const fullPhoneNumber = `+${callingCode}${phoneNumber}`;
+      console.log('Sending SMS to:', fullPhoneNumber);
+      const result = await sendCode(fullPhoneNumber);
 
       if (result.success && result.verificationId) {
         setVerificationId(result.verificationId);
@@ -93,10 +98,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     }
 
     try {
+      const fullPhoneNumber = `+${callingCode}${phoneNumber}`;
       const result = await verifyCode(
         verificationId,
         verificationCode,
-        `+504${phoneNumber}`,
+        fullPhoneNumber,
         showNameInput ? userName : undefined
       );
 
@@ -123,6 +129,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     setVerificationId('');
     setShowNameInput(false);
     setUserName('');
+  };
+
+  const onSelectCountry = (country: Country) => {
+    setCountryCode(country.cca2);
+    setCallingCode(country.callingCode[0]);
+    setShowCountryPicker(false);
   };
 
   const handleRegister = () => {
@@ -164,17 +176,31 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               <View style={styles.inputSection}>
                 <Text style={styles.inputLabel}>{t.auth.phoneNumber}</Text>
                 <View style={styles.inputContainer}>
-                  <View style={styles.prefixContainer}>
-                    <Text style={styles.prefixText}>+504</Text>
-                  </View>
+                  <TouchableOpacity
+                    style={styles.countryPickerButton}
+                    onPress={() => setShowCountryPicker(true)}
+                  >
+                    <CountryPicker
+                      countryCode={countryCode}
+                      withFilter
+                      withFlag
+                      withCallingCode
+                      withEmoji
+                      onSelect={onSelectCountry}
+                      visible={showCountryPicker}
+                      onClose={() => setShowCountryPicker(false)}
+                    />
+                    <Text style={styles.prefixText}>+{callingCode}</Text>
+                    <Ionicons name="chevron-down" size={16} color={theme.colors.text.muted} />
+                  </TouchableOpacity>
                   <TextInput
                     style={styles.phoneInput}
                     value={phoneNumber}
                     onChangeText={handlePhoneChange}
-                    placeholder={t.auth.phoneNumberPlaceholder}
+                    placeholder="1234567890"
                     placeholderTextColor={theme.colors.text.muted}
                     keyboardType="numeric"
-                    maxLength={8}
+                    maxLength={15}
                     autoFocus
                   />
                 </View>
@@ -195,7 +221,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               {/* Verification Code Input */}
               <View style={styles.inputSection}>
                 <Text style={styles.inputLabel}>{t.auth.verificationCode}</Text>
-                <Text style={styles.phoneHint}>{t.auth.codeSentTo} +504{phoneNumber}</Text>
+                <Text style={styles.phoneHint}>{t.auth.codeSentTo} +{callingCode}{phoneNumber}</Text>
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.codeInput}
@@ -326,10 +352,13 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
     ...theme.shadows.sm,
   },
-  prefixContainer: {
-    paddingLeft: theme.spacing.lg,
+  countryPickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.sm,
     paddingVertical: theme.spacing.md,
+    gap: theme.spacing.xs,
   },
   prefixText: {
     fontSize: theme.fontSize.md,

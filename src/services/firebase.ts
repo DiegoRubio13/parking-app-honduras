@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, initializeAuth, getReactNativePersistence } from "firebase/auth";
+import { getAuth, initializeAuth, getReactNativePersistence, RecaptchaVerifier } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -35,8 +36,28 @@ try {
 
 const storage = getStorage(app);
 
-// Export the services for use in other parts of the app
+// Initialize RecaptchaVerifier for web
+let recaptchaVerifier: RecaptchaVerifier | null = null;
+
+export const getRecaptchaVerifier = () => {
+  if (Platform.OS === 'web' && !recaptchaVerifier) {
+    try {
+      recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        size: 'invisible',
+        callback: (response: any) => {
+          console.log('reCAPTCHA solved');
+        },
+        'expired-callback': () => {
+          console.log('reCAPTCHA expired');
+        }
+      });
+    } catch (error) {
+      console.error('Error creating RecaptchaVerifier:', error);
+    }
+  }
+  return recaptchaVerifier;
+};
+
 export { app, db, auth, storage };
 
-// Helper function to get auth instance
 export const getAuthInstance = () => auth;
