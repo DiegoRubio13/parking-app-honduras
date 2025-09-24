@@ -22,13 +22,15 @@ export type ClientStackParamList = {
   HomeLoggedOutside: undefined;
   HomeParkedActive: { sessionId: string };
   Purchase: undefined;
-  PaymentMethod: { package: any };
+  PaymentMethod: { package: PaymentPackage };
   Profile: undefined;
   History: undefined;
   QRDisplay: undefined;
   LowMinutesWarning: { remainingMinutes: number };
   NotificationSettings: undefined;
   ExportHistory: undefined;
+  EmergencyHistory: undefined;
+  EmergencyContacts: undefined;
 };
 
 export type ClientTabParamList = {
@@ -68,5 +70,18 @@ export type ClientTabScreenProps<T extends keyof ClientTabParamList> =
 export type GuardStackScreenProps<T extends keyof GuardStackParamList> = 
   NativeStackScreenProps<GuardStackParamList, T>;
 
-export type AdminStackScreenProps<T extends keyof AdminStackParamList> = 
+export type AdminStackScreenProps<T extends keyof AdminStackParamList> =
   NativeStackScreenProps<AdminStackParamList, T>;
+
+// Payment package interface for navigation
+export interface PaymentPackage {
+  id: string;
+  name: string;
+  minutes: number;
+  price: number;
+  costPerMinute: number;
+  savings?: number;
+  popular?: boolean;
+  description: string;
+  isActive: boolean;
+}

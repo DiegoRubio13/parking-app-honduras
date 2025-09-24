@@ -101,16 +101,18 @@ export const QRDisplayScreen: React.FC<QRDisplayScreenProps> = ({
     return () => {
       clearInterval(timer);
       // Restore original brightness when leaving screen
-      if (originalBrightness > 0) {
-        Brightness.setBrightnessAsync(originalBrightness);
-      }
+      Brightness.setBrightnessAsync(originalBrightness > 0 ? originalBrightness : 0.5).catch(() => {});
     };
-  }, []);
+  }, [originalBrightness]);
 
   // Pulse animation for active status
   useEffect(() => {
+    let animationRunning = true;
+
     if (isUserParked) {
       const pulse = () => {
+        if (!animationRunning) return;
+
         Animated.sequence([
           Animated.timing(pulseAnim, {
             toValue: 1.05,
@@ -122,11 +124,20 @@ export const QRDisplayScreen: React.FC<QRDisplayScreenProps> = ({
             duration: 1500,
             useNativeDriver: true,
           }),
-        ]).start(() => pulse());
+        ]).start(() => {
+          if (animationRunning) {
+            pulse();
+          }
+        });
       };
       pulse();
     }
-  }, [isParked, pulseAnim]);
+
+    return () => {
+      animationRunning = false;
+      pulseAnim.stopAnimation();
+    };
+  }, [isUserParked, pulseAnim]);
 
   const handleGoBack = () => {
     navigation.goBack();

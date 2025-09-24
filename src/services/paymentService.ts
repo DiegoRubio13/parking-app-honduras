@@ -682,3 +682,48 @@ export const failStripePayment = async (
     throw error;
   }
 };
+
+export const createPurchaseTransaction = async (
+  userId: string,
+  userPhone: string,
+  userName: string,
+  packageId: string,
+  paymentMethod: 'transfer' | 'cash' | 'card',
+  reference?: string
+): Promise<{ success: boolean; transaction?: PaymentTransaction; error?: string }> => {
+  try {
+    const transaction = await processPurchaseTransaction(
+      userId,
+      packageId,
+      paymentMethod,
+      reference
+    );
+    return { success: true, transaction };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};
+
+export const confirmTransaction = async (
+  transactionId: string,
+  processedBy: string
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    await completeTransaction(transactionId, processedBy);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};
+
+export const rejectTransaction = async (
+  transactionId: string,
+  processedBy: string
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    await cancelTransaction(transactionId, `Rechazado por ${processedBy}`);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};

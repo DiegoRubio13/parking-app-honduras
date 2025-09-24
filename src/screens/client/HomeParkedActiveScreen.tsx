@@ -97,7 +97,11 @@ export const HomeParkedActiveScreen: React.FC<HomeParkedActiveScreenProps> = ({
 
   // Pulse animation for status badge
   useEffect(() => {
+    let animationRunning = true;
+
     const pulse = () => {
+      if (!animationRunning) return;
+
       Animated.sequence([
         Animated.timing(pulseAnim, {
           toValue: 1.05,
@@ -109,9 +113,18 @@ export const HomeParkedActiveScreen: React.FC<HomeParkedActiveScreenProps> = ({
           duration: 1000,
           useNativeDriver: true,
         }),
-      ]).start(() => pulse());
+      ]).start(() => {
+        if (animationRunning) {
+          pulse();
+        }
+      });
     };
     pulse();
+
+    return () => {
+      animationRunning = false;
+      pulseAnim.stopAnimation();
+    };
   }, [pulseAnim]);
 
   const handleRefresh = async () => {

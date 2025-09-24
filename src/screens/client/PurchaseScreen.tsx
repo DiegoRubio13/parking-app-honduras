@@ -432,7 +432,12 @@ export const PurchaseScreen: React.FC<Props> = ({ navigation }) => {
                   ))}
                   <TouchableOpacity
                     style={styles.addCardButton}
-                    onPress={() => navigation.navigate('PaymentMethod' as any)}
+                    onPress={() => {
+                      const selectedPkg = packages.find(pkg => pkg.id === selectedPackage);
+                      if (selectedPkg) {
+                        navigation.navigate('PaymentMethod', { package: selectedPkg });
+                      }
+                    }}
                   >
                     <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
                     <Text style={styles.addCardButtonText}>Agregar nueva tarjeta</Text>
@@ -444,7 +449,12 @@ export const PurchaseScreen: React.FC<Props> = ({ navigation }) => {
                   <Text style={styles.noCardsText}>No tienes tarjetas guardadas</Text>
                   <TouchableOpacity
                     style={styles.addFirstCardButton}
-                    onPress={() => navigation.navigate('PaymentMethod' as any)}
+                    onPress={() => {
+                      const selectedPkg = packages.find(pkg => pkg.id === selectedPackage);
+                      if (selectedPkg) {
+                        navigation.navigate('PaymentMethod', { package: selectedPkg });
+                      }
+                    }}
                   >
                     <Text style={styles.addFirstCardButtonText}>Agregar Tarjeta</Text>
                   </TouchableOpacity>

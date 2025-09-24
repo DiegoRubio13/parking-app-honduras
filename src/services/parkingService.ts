@@ -432,3 +432,56 @@ export const getActiveSessions = async (): Promise<ParkingSession[]> => {
     throw error;
   }
 };
+
+// Wrapper functions para compatibilidad con hooks
+export const startSession = async (
+  userId: string,
+  userPhone: string,
+  userName: string,
+  location: string,
+  spot?: string
+): Promise<{ success: boolean; session?: ParkingSession; error?: string }> => {
+  try {
+    const session = await startParkingSession(userId, userPhone, userName, location, spot);
+    return { success: true, session };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};
+
+export const endSession = async (
+  sessionId: string,
+  guardId?: string
+): Promise<{ success: boolean; session?: ParkingSession; error?: string }> => {
+  try {
+    const session = await endParkingSession(sessionId, guardId);
+    return { success: true, session };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};
+
+export const getSessionByQR = async (
+  qrCode: string
+): Promise<ParkingSession | null> => {
+  try {
+    const q = query(
+      collection(db, 'parkingSessions'),
+      where('qrCode', '==', qrCode),
+      where('isActive', '==', true),
+      limit(1)
+    );
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) return null;
+
+    const sessionData = snapshot.docs[0].data();
+    return {
+      id: snapshot.docs[0].id,
+      ...sessionData
+    } as ParkingSession;
+  } catch (error) {
+    console.error('Error getting session by QR:', error);
+    return null;
+  }
+};

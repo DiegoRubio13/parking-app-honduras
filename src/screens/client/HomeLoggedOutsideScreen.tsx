@@ -62,7 +62,7 @@ export const HomeLoggedOutsideScreen: React.FC<HomeLoggedOutsideScreenProps> = (
   };
 
   const handlePurchaseMinutes = () => {
-    navigation.navigate('Purchase');
+    navigation.getParent()?.navigate('Purchase');
   };
 
   const handleShowFullQR = () => {
@@ -70,11 +70,11 @@ export const HomeLoggedOutsideScreen: React.FC<HomeLoggedOutsideScreenProps> = (
   };
 
   const handleViewProfile = () => {
-    navigation.navigate('Profile');
+    navigation.getParent()?.navigate('Profile');
   };
 
   const handleViewHistory = () => {
-    navigation.navigate('History');
+    navigation.getParent()?.navigate('History');
   };
 
   const handleEmergency = () => {

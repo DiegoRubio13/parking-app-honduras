@@ -13,6 +13,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { PhoneContainer } from '../../components/layout/PhoneContainer';
 import { Button } from '../../components/ui/Button';
+import { HeaderBack } from '../../components/navigation/HeaderBack';
 import { theme } from '../../constants/theme';
 import { useI18n } from '../../hooks/useI18n';
 import { registerUser } from '../../services/authService';
@@ -170,9 +171,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) =>
         >
           {/* Header */}
           <View style={styles.header}>
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-              <Ionicons name="arrow-back" size={20} color={theme.colors.primary} />
-            </TouchableOpacity>
+            <HeaderBack onPress={handleBack} />
             <Text style={styles.headerTitle}>{t.auth.registration}</Text>
           </View>
 
@@ -287,16 +286,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.lg,
-    paddingBottom: theme.spacing.xxl,
-  },
-  backButton: {
-    backgroundColor: theme.colors.card,
-    borderWidth: 2,
-    borderColor: theme.colors.blue[200],
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.sm,
-    ...theme.shadows.sm,
+    paddingTop: theme.spacing.xxl,
+    paddingBottom: theme.spacing.md,
   },
   headerTitle: {
     fontSize: theme.fontSize.lg,

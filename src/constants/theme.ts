@@ -22,6 +22,38 @@ export const theme = {
       800: '#1e40af',
       900: '#1e3a8a'
     },
+    red: {
+      50: '#fef2f2',
+      100: '#fee2e2',
+      500: '#ef4444',
+      600: '#dc2626',
+      700: '#b91c1c',
+    },
+    green: {
+      50: '#f0fdf4',
+      100: '#dcfce7',
+      500: '#22c55e',
+      600: '#16a34a',
+      700: '#15803d',
+    },
+    gray: {
+      50: '#f9fafb',
+      100: '#f3f4f6',
+      200: '#e5e7eb',
+      500: '#6b7280',
+      600: '#4b5563',
+      700: '#374151',
+    },
+    orange: {
+      50: '#fff7ed',
+      100: '#ffedd5',
+      500: '#f97316',
+      600: '#ea580c',
+    },
+    indigo: {
+      50: '#eef2ff',
+      600: '#4f46e5',
+    },
     text: {
       primary: '#1e293b',
       secondary: '#64748b',
@@ -104,6 +136,17 @@ export const theme = {
       shadowRadius: 25,
       elevation: 8,
     }
+  },
+  layout: {
+    headerPaddingTop: 60, // Safe area top + padding
+    headerHeight: 120,
+    tabBarHeight: 60,
+    cardElevation: 4,
+  },
+  borders: {
+    thin: 1,
+    medium: 2,
+    thick: 3,
   }
 };
 

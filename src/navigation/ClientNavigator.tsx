@@ -23,6 +23,8 @@ import SOSServicesScreen from '../screens/client/SOSServicesScreen';
 import SubscriptionPlansScreen from '../screens/client/SubscriptionPlansScreen';
 import EmergencyRequestScreen from '../screens/client/EmergencyRequestScreen';
 import EmergencyTrackingScreen from '../screens/client/EmergencyTrackingScreen';
+import EmergencyHistoryScreen from '../screens/client/EmergencyHistoryScreen';
+import EmergencyContactsScreen from '../screens/client/EmergencyContactsScreen';
 
 // Import settings and general screens
 import SettingsScreen from '../screens/settings/SettingsScreen';
@@ -56,6 +58,8 @@ export type ClientStackParamList = {
   SubscriptionPlans: undefined;
   EmergencyRequest: { serviceType: any };
   EmergencyTracking: { requestId: string; serviceType: any };
+  EmergencyHistory: undefined;
+  EmergencyContacts: undefined;
 };
 
 export type ClientTabParamList = {
@@ -124,6 +128,16 @@ function HomeStackNavigator() {
         <Stack.Screen name="SubscriptionPlans" component={SubscriptionPlansScreen} />
         <Stack.Screen name="EmergencyRequest" component={EmergencyRequestScreen} />
         <Stack.Screen name="EmergencyTracking" component={EmergencyTrackingScreen} />
+        <Stack.Screen
+          name="EmergencyHistory"
+          component={EmergencyHistoryScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EmergencyContacts"
+          component={EmergencyContactsScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     );
   }
@@ -149,6 +163,16 @@ function HomeStackNavigator() {
       <Stack.Screen name="SubscriptionPlans" component={SubscriptionPlansScreen} />
       <Stack.Screen name="EmergencyRequest" component={EmergencyRequestScreen} />
       <Stack.Screen name="EmergencyTracking" component={EmergencyTrackingScreen} />
+      <Stack.Screen
+        name="EmergencyHistory"
+        component={EmergencyHistoryScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EmergencyContacts"
+        component={EmergencyContactsScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

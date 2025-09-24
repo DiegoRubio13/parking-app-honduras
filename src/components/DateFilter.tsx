@@ -5,8 +5,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Modal,
-  Platform
+  Platform,
+  TouchableWithoutFeedback,
+  Button
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { format, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
 import { theme } from '../constants/theme';
 
@@ -36,6 +39,8 @@ export const DateFilter: React.FC<DateFilterProps> = ({
     }
   );
   const [showCustomPicker, setShowCustomPicker] = useState(false);
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
   const quickFilters: { label: string; value: QuickFilterOption }[] = [
     { label: 'Today', value: 'today' },
@@ -131,46 +136,93 @@ export const DateFilter: React.FC<DateFilterProps> = ({
         animationType="slide"
         onRequestClose={() => setShowCustomPicker(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Date Range</Text>
+        <TouchableWithoutFeedback onPress={() => setShowCustomPicker(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Seleccionar rango de fechas</Text>
 
-            <View style={styles.dateInputContainer}>
-              <Text style={styles.dateLabel}>Start Date</Text>
-              <TouchableOpacity style={styles.dateInput}>
-                <Text style={styles.dateInputText}>
-                  {format(customRange.startDate, 'MMM dd, yyyy')}
-                </Text>
-              </TouchableOpacity>
-            </View>
+                <View style={styles.datePickerRow}>
+                  <Text style={styles.datePickerLabel}>Desde:</Text>
+                  {Platform.OS === 'ios' ? (
+                    <DateTimePicker
+                      value={customRange.startDate}
+                      mode="date"
+                      display="spinner"
+                      onChange={(event, selectedDate) => {
+                        if (selectedDate) {
+                          setCustomRange({ ...customRange, startDate: selectedDate });
+                        }
+                      }}
+                      maximumDate={customRange.endDate}
+                    />
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.androidDateButton}
+                      onPress={() => setShowStartDatePicker(true)}
+                    >
+                      <Text>{customRange.startDate.toLocaleDateString()}</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
 
-            <View style={styles.dateInputContainer}>
-              <Text style={styles.dateLabel}>End Date</Text>
-              <TouchableOpacity style={styles.dateInput}>
-                <Text style={styles.dateInputText}>
-                  {format(customRange.endDate, 'MMM dd, yyyy')}
-                </Text>
-              </TouchableOpacity>
-            </View>
+                <View style={styles.datePickerRow}>
+                  <Text style={styles.datePickerLabel}>Hasta:</Text>
+                  {Platform.OS === 'ios' ? (
+                    <DateTimePicker
+                      value={customRange.endDate}
+                      mode="date"
+                      display="spinner"
+                      onChange={(event, selectedDate) => {
+                        if (selectedDate) {
+                          setCustomRange({ ...customRange, endDate: selectedDate });
+                        }
+                      }}
+                      minimumDate={customRange.startDate}
+                      maximumDate={new Date()}
+                    />
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.androidDateButton}
+                      onPress={() => setShowEndDatePicker(true)}
+                    >
+                      <Text>{customRange.endDate.toLocaleDateString()}</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
 
-            <View style={styles.modalActions}>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.modalButtonCancel]}
-                onPress={() => setShowCustomPicker(false)}
-              >
-                <Text style={styles.modalButtonTextCancel}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.modalButton, styles.modalButtonApply]}
-                onPress={handleCustomRangeApply}
-              >
-                <Text style={styles.modalButtonTextApply}>Apply</Text>
-              </TouchableOpacity>
-            </View>
+                <Button title="Aplicar" onPress={handleCustomRangeApply} />
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
+
+      {Platform.OS === 'android' && showStartDatePicker && (
+        <DateTimePicker
+          value={customRange.startDate}
+          mode="date"
+          onChange={(event, selectedDate) => {
+            setShowStartDatePicker(false);
+            if (selectedDate) {
+              setCustomRange({ ...customRange, startDate: selectedDate });
+            }
+          }}
+        />
+      )}
+
+      {Platform.OS === 'android' && showEndDatePicker && (
+        <DateTimePicker
+          value={customRange.endDate}
+          mode="date"
+          onChange={(event, selectedDate) => {
+            setShowEndDatePicker(false);
+            if (selectedDate) {
+              setCustomRange({ ...customRange, endDate: selectedDate });
+            }
+          }}
+        />
+      )}
     </View>
   );
 };
@@ -293,6 +345,21 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize.md,
     fontWeight: theme.fontWeight.semibold,
     color: '#ffffff'
+  },
+  datePickerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: theme.spacing.md,
+  },
+  datePickerLabel: {
+    fontSize: theme.fontSize.md,
+    marginRight: theme.spacing.md,
+  },
+  androidDateButton: {
+    padding: theme.spacing.sm,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.md,
   }
 });
 

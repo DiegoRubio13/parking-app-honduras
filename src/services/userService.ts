@@ -239,3 +239,38 @@ export const clearCurrentUser = async (): Promise<void> => {
   // This function is now handled by the auth service
   // Keeping for backward compatibility
 };
+
+export const incrementUserBalance = async (
+  userId: string,
+  amount: number
+): Promise<boolean> => {
+  try {
+    const user = await getUserById(userId);
+    if (!user) throw new Error('Usuario no encontrado');
+
+    const newBalance = user.balance + amount;
+    await updateUserBalance(userId, newBalance);
+    return true;
+  } catch (error) {
+    console.error('Error incrementing balance:', error);
+    return false;
+  }
+};
+
+export const decrementUserBalance = async (
+  userId: string,
+  amount: number
+): Promise<boolean> => {
+  try {
+    const user = await getUserById(userId);
+    if (!user) throw new Error('Usuario no encontrado');
+    if (user.balance < amount) throw new Error('Saldo insuficiente');
+
+    const newBalance = user.balance - amount;
+    await updateUserBalance(userId, newBalance);
+    return true;
+  } catch (error) {
+    console.error('Error decrementing balance:', error);
+    return false;
+  }
+};

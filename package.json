@@ -31,6 +31,7 @@
     "expo-brightness": "~13.1.4",
     "expo-camera": "~16.1.11",
     "expo-clipboard": "~7.1.5",
+    "expo-dev-client": "~5.2.4",
     "expo-linear-gradient": "~14.1.5",
     "expo-location": "~19.0.0",
     "expo-notifications": "~0.31.4",
@@ -52,7 +53,7 @@
     "react-native-svg": "15.11.2",
     "react-native-vector-icons": "^10.0.3",
     "zustand": "^4.4.7",
-    "expo-dev-client": "~5.2.4"
+    "@react-native-community/datetimepicker": "8.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -68,7 +69,7 @@
     "jest-expo": "^54.0.12",
     "react-test-renderer": "^19.0.0",
     "ts-jest": "^29.4.4",
-    "typescript": "~5.8.3"
+    "typescript": "^5.8.3"
   },
   "private": true
 }
