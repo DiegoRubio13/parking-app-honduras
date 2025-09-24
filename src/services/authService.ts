@@ -48,45 +48,27 @@ export const sendVerificationCode = async (phoneNumber: string): Promise<{ succe
   try {
     console.log('Sending verification code to:', phoneNumber);
 
-    try {
-      let confirmationResult;
-
-      if (Platform.OS === 'web') {
-        const recaptchaVerifier = getRecaptchaVerifier();
-        if (!recaptchaVerifier) {
-          throw new Error('reCAPTCHA not initialized');
-        }
-        confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
-      } else {
-        confirmationResult = await signInWithPhoneNumber(auth, phoneNumber);
+    if (Platform.OS === 'web') {
+      const recaptchaVerifier = getRecaptchaVerifier();
+      if (!recaptchaVerifier) {
+        throw new Error('reCAPTCHA not initialized');
       }
+      const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
 
-      console.log('Verification code sent successfully via Firebase');
+      console.log('Verification code sent successfully via Firebase (web)');
       return {
         success: true,
         verificationId: confirmationResult.verificationId,
         confirmationResult
       };
-    } catch (firebaseError: any) {
-      console.error('Firebase phone auth error:', firebaseError);
+    } else {
+      const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, null as any);
 
-      let errorMessage = 'Error enviando código de verificación';
-
-      if (firebaseError.code === 'auth/invalid-phone-number') {
-        errorMessage = 'Número de teléfono inválido';
-      } else if (firebaseError.code === 'auth/missing-phone-number') {
-        errorMessage = 'Número de teléfono requerido';
-      } else if (firebaseError.code === 'auth/quota-exceeded') {
-        errorMessage = 'Se ha excedido el límite de SMS. Intenta más tarde';
-      } else if (firebaseError.code === 'auth/app-not-authorized') {
-        errorMessage = 'La aplicación no está autorizada para usar Firebase Auth';
-      } else if (firebaseError.message) {
-        errorMessage = firebaseError.message;
-      }
-
+      console.log('Verification code sent successfully via Firebase (native)');
       return {
-        success: false,
-        error: errorMessage
+        success: true,
+        verificationId: confirmationResult.verificationId,
+        confirmationResult
       };
     }
   } catch (error: any) {
@@ -124,6 +106,7 @@ export const verifyCodeAndSignIn = async (
 ): Promise<AuthResult> => {
   try {
     let userCredential;
+
 
     if (confirmationResult) {
       userCredential = await confirmationResult.confirm(code);
